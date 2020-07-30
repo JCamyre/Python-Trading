@@ -1,26 +1,15 @@
-import pandas as pd
 import requests
-import pickle
-from requests import get 
-from bs4 import BeautifulSoup
 from time import sleep, strftime, localtime, time
 from datetime import date, datetime
-# This importing technique only works when you are importing pytrading.live_trading from outside of the package
-from . import Portfolio
-
-import yfinance as yf 
-# from pygame import mixer 
+from pygame import mixer
 
 # At the start of the day, get the top earners of the day, pickle it, and keep running the searching thing every 90 seconds (meaning time.sleep(15))
 
-# mixer.init()
+mixer.init()
 
 pd.options.display.max_rows = 1200
 pd.options.display.max_columns = 10
 
-# Stocks under two billion market cap, low float
-
-my_stocks = ['AGI', 'AMAT', 'AYRO', 'BIDU', 'BILI', 'BILL', 'JBLU', 'JD', 'KHC', 'LUV', 'QD', 'RGR', 'SWBI', 'TSM', 'VIPS']
 
 def alert_sound():
 	regular_instrumental = mixer.music.load("C:/Users/JWcam/Desktop/NCT 127 - Regular (Instrumental).mp3")
@@ -28,7 +17,6 @@ def alert_sound():
 	mixer.music.play()
 	sleep(6.85)
 	mixer.music.stop()
-
 
 
 def stock_tracker(portfolio):
@@ -43,7 +31,7 @@ def stock_tracker(portfolio):
 		intra_day_stats = stock.df
 		m1, m5, m15, m30 = intra_day_stats.iloc[-1:][['Volume', 'Close']], intra_day_stats.iloc[-5:][['Volume', 'Close']]/5, intra_day_stats.iloc[-15:][['Volume', 'Close']]/5, intra_day_stats.iloc[-30:][['Volume', 'Close']]/5
 		delta_volume = cur_stats['Volume']/sum(stock.df_month.iloc[-30:]['Volume'])
-
+		
 		print(sum(m5['Volume'])/5, 1.25 * sum(m30['Volume'])/30, sum(m5['Close'])/5, 1.05 * sum(m30['Close'])/30)
 		change_percentage = ((cur_stats['Close'] - prev_stats['Close'])/prev_stats['Close'])*100 
 
@@ -70,6 +58,8 @@ def trending_stocks(portfolio):
 			stocks_to_display.append(stock.ticker + ' 2m')
 		elif m1['9_sma'] < sum(m1['close']) or sum(m1['Volume']) > (1.25 * sum(m15['Volume'])) and sum(m1['Close']) > (1.015 * sum(m15['Close'])) and cur_stats['Volume'] > 100_000:
 			stocks_to_display.append(stock.ticker + ' 1m')
+
+
 	print(f'Computing time: {time() - t1:.2f}s. Average of {len(portfolio)/(time() - t1):.2f} stocks per second.')	
 	return stocks_to_display
 

@@ -116,7 +116,7 @@ def get_intra_day_data(ticker, interval='1m', today=True):
 		ticker.loc[ticker.index[i], '20_sma'] = sum([float(i) for i in ticker.iloc[i-20:i]['Close']])/20
 
 	# ticker['13_sma'] = ticker['Close'].iloc[12:].apply(lambda close: close.iloc[-13:].mean(axis=1))
-	ticker = ticker.drop(columns=['Open', 'High'])
+	ticker = ticker.drop(columns=['Open'])
 	return ticker
 
 def get_month_data(ticker, interval='1d'):
