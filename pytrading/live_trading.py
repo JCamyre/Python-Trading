@@ -93,9 +93,9 @@ def trending_stocks(portfolio):
 		# and delta_volume > 1.25 Is this needed?
 		# Maybe detect a drop in value as well?
 		# Maybe drop one minute volume/close
-		if m2['9_sma'] < sum(m2['close'] or sum(m2['Volume'])) > (1.25 * sum(m15['Volume'])) and sum(m2['Close']) > (1.015 * sum(m15['Close'])) and cur_stats['Volume'] > 100_000:
+		if m2['9_sma'] < sum(m2['close']) or sum(m2['Volume']) > (1.25 * sum(m15['Volume'])) and sum(m2['Close']) > (1.015 * sum(m15['Close'])) and cur_stats['Volume'] > 100_000:
 			stocks_to_display.append(stock.ticker + ' 2m')
-		elif m1['9_sma'] < sum(m1['close']sum(m1['Volume'])) > (1.25 * sum(m15['Volume'])) and sum(m1['Close']) > (1.015 * sum(m15['Close'])) and cur_stats['Volume'] > 100_000:
+		elif m1['9_sma'] < sum(m1['close']) or sum(m1['Volume']) > (1.25 * sum(m15['Volume'])) and sum(m1['Close']) > (1.015 * sum(m15['Close'])) and cur_stats['Volume'] > 100_000:
 			stocks_to_display.append(stock.ticker + ' 1m')
 	print(f'Computing time: {time() - t1:.2f}s. Average of {len(portfolio)/(time() - t1):.2f} stocks per second.')	
 	return stocks_to_display
