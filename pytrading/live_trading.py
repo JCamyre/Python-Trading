@@ -19,6 +19,13 @@ def alert_sound():
 	mixer.music.stop()
 
 
+def pennant(intra_day):
+	first, second, third, last = intra_day.iloc[-48:-36], intra_day.iloc[-36:-24], intra_day.iloc[-24:-12], intra_day.iloc[-12:]
+	deltas = [first.max()['High'] - first.min()['Low'], second.max()['High'] - second.min()['Low'], third.max()['High'] - third.min()['Low'], last.max()['High'] - last.min()['Low']]
+	pattern = len([i for i in range(3) if deltas[i] > deltas[i+1]]) >= 2
+	return pattern, deltas
+
+
 def stock_tracker(portfolio):
 	t1 = time()
 	info = [f"Time: {strftime('%I:%M:%S', localtime())}"]
@@ -77,12 +84,8 @@ def trending_stocks(portfolio):
 		top = intra_day_stats[-50:].nsmallest(10, ['Low'])['Low'].sort_values(ascending=False)
 		top = [price for price in top[1:] if top[0] <= price*1.01]
 
+		pennant = pennant(intra_day_stats)
 
-		# Symmetrical triangle/penant: The highest high and lowest low are descending
-		
-
-
-		# For penant: look at m50, m30, m15, m5, if they the range (max high low) is getting smaller, possible penant
 
 		# if m15.iloc[-2]['2_sma'] < m15.iloc[-2]['Close'] and sum(m2['2_sma']) > sum(m2['Close']):
 		# 	print(stock.ticker + ' will prob go lower.')
