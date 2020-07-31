@@ -57,25 +57,28 @@ def get_silver_stocks():
 
 def load_biggest_movers():
 	path = Path(__file__).parents[1]
-	with open(f'{path}/dailypickle/{datetime.now().strftime("%m-%d-%Y")}.pkl', 'rb') as f:
+	with open(f'{path}/dailypickle/biggest_movers-{datetime.now().strftime("%m-%d-%Y")}.pkl', 'rb') as f:
 		return pickle.load(f)
 
 
 def pickle_biggest_movers(portfolio):
 	path = Path(__file__).parents[1]
-	with open(f'{path}/dailypickle/{datetime.now().strftime("%m-%d-%Y")}.pkl', 'wb') as f:
-		pickle.dump(portfolio, f)
+	if Path(f'{path}/dailypickle/biggest_movers-{datetime.now().strftime("%m-%d-%Y")}.pkl').exists():
+		with open(f'{path}/dailypickle/biggest_movers-{datetime.now().strftime("%m-%d-%Y")}.pkl', 'wb') as f:
+			pickle.dump(portfolio, f)
 
 def load_positions():
 	path = Path(__file__).parents[1]
-	with open(f'{path}/dailypickle/{datetime.now().strftime("%m-%d-%Y")}.pkl', 'rb') as f:
+	with open(f'{path}/dailypickle/positions-{datetime.now().strftime("%m-%d-%Y")}.pkl', 'rb') as f:
 		return pickle.load(f)
 
 
 def pickle_positions(portfolio):
+	# This is useless
 	path = Path(__file__).parents[1]
-	with open(f'{path}/dailypickle/{datetime.now().strftime("%m-%d-%Y")}.pkl', 'wb') as f:
-		pickle.dump(portfolio, f)	
+	if Path(f'{path}/dailypickle/positions-{datetime.now().strftime("%m-%d-%Y")}.pkl').exists():
+		with open(f'{path}/dailypickle/positions-{datetime.now().strftime("%m-%d-%Y")}.pkl', 'wb') as f:
+			pickle.dump(portfolio, f)
 
 
 def pickle_dump(portfolio):
