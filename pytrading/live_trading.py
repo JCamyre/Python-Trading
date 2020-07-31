@@ -1,11 +1,11 @@
-import requests
-from time import sleep, strftime, localtime, time
 from datetime import date, datetime
-from pygame import mixer
+import pandas as pd 
+# from pygame import mixer
+from time import sleep, strftime, localtime, time
 
 # At the start of the day, get the top earners of the day, pickle it, and keep running the searching thing every 90 seconds (meaning time.sleep(15))
 
-mixer.init()
+# mixer.init()
 
 pd.options.display.max_rows = 1200
 pd.options.display.max_columns = 10
@@ -43,23 +43,59 @@ def stock_tracker(portfolio):
 
 weekly_tickers = ['IVV','SPY','BDX','DIA','LH','IJH','PH','GLD','SAP','MMM','QLD','LLY','MTUM','LQD','EBON','BSIG','AMKR','TSM','OSTK','MFG','SPWR','BVN','SOXL','LTRPA','KLIC','MELI','CSIQ','BBD','ANH','CWH','CC','NVCN','GSX','LL','SID','ABEV','SE','CX','LSCC','SCCO','ACCD','MDLA','PS','ELY','SEM','BRZU','ARAY','ALXN','JKS','PDD','FTCH','ICHR','STNE','SEDG','CHNG','AVTR','GT','GPRO','DDD','PAYS','ATHM','IOVA','BCC','AA','BIIB','FLEX','LPX','BECN','NAVI','SHOP','INVA','REGN','FOLD','KLAC','NET','ETSY','EDC','CRON','MDRX','FBHS','GLW','SDC','LEN','PKI','PD','STM','JELD','SPWH','MAXR','KBH','PHM','DHI','LW','EBAY','ON','CRWD','ANET','GGB','QCOM','CCC','SMTC','LITE','ST','CIEN','SMH','DDOG','RYN','AMAT','ASML','NOK','GRMN','TAL','IFRX','MTOR','PSEC','CLF','LEG','MAS','SQ','PMT','BHP','NXPI','AN','CVA','EWZ','BBL','LRCX','FDX','LBTYA','GDOT','NFLX','CNQ','SWK','CCJ','HAIN','MU','ROKU','GKOS','GRUB','BGS','DKS','LBRT','LBTYK','RIO','FCX','OI','BRKR','JD','BILI','DOCU','XHB','PTON','STOR','INTU','YNDX','ADI','ERIC','GMED','CRMD','SOXX','CTB','AYX','OC','MS','INFN','ALC','AXL','SNE','RPRX','GLNG','IRDM','MXIM','NTR','ARNA','GNTX','IBB','IQV','LULU','AKAM','CDNS','NKTR','CREE','HCAT','PHG','RH','EWW','MHK','HPQ','NUE','PLAN','DLR','CTSH','MRK','NOW','INFY','EQIX','MNST','JNPR','PBR','EMN','ICPT','AAPL','CSTM','ALV','OLLI','MBT','ACC','REGI','JHG','CPRX','BOTZ','CRUS','SNAP','SRC','ANGI','ATVI','PM','NVDA','FMX','CDK','OSK','GNRC','HP','LEA','PRGO','SPG','BKI','BR','KC','STLD','CG','CPRT','LXP']
 
-# Detect stocks crossing the 9 MA + RSI below 45
+# Detect stocks crossing the 9 MA + RSI below 45. For 9 MA crossing, maybe wait for it to cross above and be greater than for one/two periods (sum(m2['Close']) > sum(m2['9_sma']))
 
 def trending_stocks(portfolio):
-	stocks_to_display = [strftime('%I:%M:%S', localtime())]
+	# Alerts if a stock triggers a variety of signals. The program displays both the ticker and the signal that was triggered.
+	# stocks_to_display = [strftime('%I:%M:%S', localtime())]
+	print('Time ' + strftime('%I:%M:%S', localtime()))
 	t1 = time()
 	for stock in portfolio:
 		stock.update_stock()
 		intra_day_stats = stock.df
-		m1, m2, m15, m30 = intra_day_stats.iloc[-2:-1][['Volume', 'Close']], intra_day_stats.iloc[-3:-1][['Volume', 'Close']]/2, intra_day_stats.iloc[-16:-1][['Volume', 'Close']]/15, intra_day_stats.iloc[-31:-1][['Volume', 'Close']]/30
-
+		try:
+			cur_stats = stock.df_month.iloc[-1]
+			m1, m2, m15, m30 = intra_day_stats.iloc[-1:][['Volume', 'Close', '2_sma', '9_sma']], intra_day_stats.iloc[-2:][['Volume', 'Close', '2_sma', '9_sma']]/2, intra_day_stats.iloc[-15:][['Volume', 'Close', '2_sma', '9_sma']]/15, intra_day_stats.iloc[-30:][['Volume', 'Close', '2_sma', '9_sma']]/30
+			# Since I don't care about volume rn
+			# m1, m2, m15, m30 = intra_day_stats.iloc[-2:-1][['Volume', 'Close', '2_sma', '9_sma']], intra_day_stats.iloc[-3:-1][['Volume', 'Close', '2_sma', '9_sma']]/2, intra_day_stats.iloc[-16:-1][['Volume', 'Close', '2_sma', '9_sma']]/15, intra_day_stats.iloc[-31:-1][['Volume', 'Close', '2_sma', '9_sma']]/30
+		except:
+			continue
 		# Maybe detect a drop in value as well?
-		if m2['9_sma'] < sum(m2['close']) or sum(m2['Volume']) > (1.25 * sum(m15['Volume'])) and sum(m2['Close']) > (1.015 * sum(m15['Close'])) and cur_stats['Volume'] > 100_000:
-			stocks_to_display.append(stock.ticker + ' 2m')
-		elif m1['9_sma'] < sum(m1['close']) or sum(m1['Volume']) > (1.25 * sum(m15['Volume'])) and sum(m1['Close']) > (1.015 * sum(m15['Close'])) and cur_stats['Volume'] > 100_000:
-			stocks_to_display.append(stock.ticker + ' 1m')
+		# print('30 min high', stock.ticker, m30.max(), m30.idxmax())
+		# print(m1['9_sma'])
+
+		# Don't care about (and cur_stats['Volume'] > 100_000) for now 
+		# Need a better system for encompassing the most amount of stocks that may move
+
+		# Double_bottom
+		bottom = intra_day_stats[-50:].nsmallest(5, ['Low'])['Low'].sort_values(ascending=True)
+		bottom = [price for price in bottom[1:] if bottom[0]*1.01 >= price]
+		if len(bottom) > 0:
+			print(f'{stock.ticker} bottoming @ {bottom[0]}')
+
+		# Double_top
+		top = intra_day_stats[-50:].nsmallest(10, ['Low'])['Low'].sort_values(ascending=False)
+		top = [price for price in top[1:] if top[0] <= price*1.01]
+
+
+		# Symmetrical triangle/penant: The highest high and lowest low are descending
+		
+
+
+		# For penant: look at m50, m30, m15, m5, if they the range (max high low) is getting smaller, possible penant
+
+		# if m15.iloc[-2]['2_sma'] < m15.iloc[-2]['Close'] and sum(m2['2_sma']) > sum(m2['Close']):
+		# 	print(stock.ticker + ' will prob go lower.')
+		if cur_stats['Volume'] > 100_000:
+			if m15.iloc[-3]['9_sma'] > m15.iloc[-3]['Close'] and m15.iloc[-2]['9_sma'] < m15.iloc[-2]['Close'] and m1.iloc[0]['9_sma'] < m1.iloc[0]['Close']:
+				print(stock.ticker + ' 9_sma crossed and held')
+			if sum(m2['Volume']) > (1.25 * sum(m15['Volume'])) and sum(m2['Close']) > (1.015 * sum(m15['Close'])):
+				print(stock.ticker + ' 2m')
+			elif m1.iloc[0]['Volume'] > (1.25 * sum(m15['Volume'])) and m1.iloc[0]['Close'] > (1.015 * sum(m15['Close'])):
+				print(stock.ticker + ' 1m')
 
 
 	print(f'Computing time: {time() - t1:.2f}s. Average of {len(portfolio)/(time() - t1):.2f} stocks per second.')	
-	return stocks_to_display
+	# return stocks_to_display
+
 
