@@ -1,24 +1,22 @@
-# from livetrading import get_day_premarket_movers
 from requests import get 
 from bs4 import BeautifulSoup
 from datetime import datetime
 import pickle
+from pathlib import Path
 
+# def get_biggest_movers():
+# 	tickers = []
+# 	request = get('https://www.tradingview.com/markets/stocks-usa/market-movers-gainers/')
+# 	soup = BeautifulSoup(request.text, 'lxml')
+# 	table = soup.find('tbody', {'class': 'tv-data-table__tbody'})
+# 	for i in table.find_all('a', {'class': 'tv-screener__symbol'})[::2]:
+# 		tickers.append(i.get_text())
 
-def get_biggest_movers():
-	tickers = []
-	request = get('https://www.tradingview.com/markets/stocks-usa/market-movers-gainers/')
-	soup = BeautifulSoup(request.text, 'lxml')
-	table = soup.find('tbody', {'class': 'tv-data-table__tbody'})
-	for i in table.find_all('a', {'class': 'tv-screener__symbol'})[::2]:
-		tickers.append(i.get_text())
+# 	request = get('http://thestockmarketwatch.com/markets/topstocks/')
+# 	soup = BeautifulSoup(request.text, 'lxml')
+# 	table = soup.find_all('div', {'class': 'activestockstbl'})
 
-	request = get('http://thestockmarketwatch.com/markets/topstocks/')
-	soup = BeautifulSoup(request.text, 'lxml')
-	table = soup.find_all('div', {'class': 'activestockstbl'})
-	print(table)
-
-	return list(set(tickers))
+# 	return list(set(tickers))
 
 
 def get_day_hot_stocks():
@@ -26,7 +24,7 @@ def get_day_hot_stocks():
 	page = get(url)
 	soup = BeautifulSoup(page.content, 'html.parser')
 	rows = soup.find_all('tr', {'class':'tv-data-table__row tv-data-table__stroke tv-screener-table__result-row'})
-	return [row.find('a').get_text() for row in rows][:50]
+	return [row.find('a').get_text() for row in rows]
 
 
 def get_day_premarket_movers():
@@ -57,14 +55,27 @@ def get_silver_stocks():
 			print(f'{rows[i].get_text()}: ${rows[i+1].get_text()}')
 
 
-def load_todays_biggest_movers():
-	with open(f'C:/Users/JWcam/Desktop/All_projects/Stocks/biggest_movers/{datetime.now().strftime("%m-%d-%Y")}.pkl', 'rb') as f:
+def load_biggest_movers():
+	path = Path(__file__).parents[1]
+	with open(f'{path}/dailypickle/{datetime.now().strftime("%m-%d-%Y")}.pkl', 'rb') as f:
 		return pickle.load(f)
 
 
 def pickle_biggest_movers(portfolio):
-	with open(f'C:/Users/JWcam/Desktop/All_projects/Stocks/biggest_movers/{datetime.now().strftime("%m-%d-%Y")}.pkl', 'wb') as f:
+	path = Path(__file__).parents[1]
+	with open(f'{path}/dailypickle/{datetime.now().strftime("%m-%d-%Y")}.pkl', 'wb') as f:
 		pickle.dump(portfolio, f)
+
+def load_positions():
+	path = Path(__file__).parents[1]
+	with open(f'{path}/dailypickle/{datetime.now().strftime("%m-%d-%Y")}.pkl', 'rb') as f:
+		return pickle.load(f)
+
+
+def pickle_positions(portfolio):
+	path = Path(__file__).parents[1]
+	with open(f'{path}/dailypickle/{datetime.now().strftime("%m-%d-%Y")}.pkl', 'wb') as f:
+		pickle.dump(portfolio, f)	
 
 
 def pickle_dump(portfolio):
