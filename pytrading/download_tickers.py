@@ -32,7 +32,7 @@ def get_day_premarket_movers():
 	page = get(url)
 	soup = BeautifulSoup(page.content, 'html.parser')
 	table = soup.find_all('table', {'id': 'tblMoversDesktop'})[0]
-	print('First list is biggest winners, second list is biggest losers. Third list is from a different website.')
+	print('First list is biggest winners, second list is from a different website.')
 	marketwatch_list = [(ticker.get_text(), float(change.get_text()[:-1])) for ticker, change in zip(table.find_all('td', {'class': 'tdSymbol'}), table.find_all('td', {'class': 'tdChangePct'}))]
 
 	url = 'https://www.benzinga.com/money/premarket-movers/'
@@ -63,9 +63,8 @@ def load_biggest_movers():
 
 def pickle_biggest_movers(portfolio):
 	path = Path(__file__).parents[1]
-	if Path(f'{path}/dailypickle/biggest_movers-{datetime.now().strftime("%m-%d-%Y")}.pkl').exists():
-		with open(f'{path}/dailypickle/biggest_movers-{datetime.now().strftime("%m-%d-%Y")}.pkl', 'wb') as f:
-			pickle.dump(portfolio, f)
+	with open(f'{path}/dailypickle/biggest_movers-{datetime.now().strftime("%m-%d-%Y")}.pkl', 'wb') as f:
+		pickle.dump(portfolio, f)
 
 def load_positions():
 	path = Path(__file__).parents[1]
@@ -76,9 +75,8 @@ def load_positions():
 def pickle_positions(portfolio):
 	# This is useless
 	path = Path(__file__).parents[1]
-	if Path(f'{path}/dailypickle/positions-{datetime.now().strftime("%m-%d-%Y")}.pkl').exists():
-		with open(f'{path}/dailypickle/positions-{datetime.now().strftime("%m-%d-%Y")}.pkl', 'wb') as f:
-			pickle.dump(portfolio, f)
+	with open(f'{path}/dailypickle/positions-{datetime.now().strftime("%m-%d-%Y")}.pkl', 'wb') as f:
+		pickle.dump(portfolio, f)
 
 
 def pickle_dump(portfolio):

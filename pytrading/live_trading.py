@@ -24,6 +24,7 @@ def stock_tracker(portfolio):
 	current change percentage."""
 	t1 = time()
 	info = [f"Time: {strftime('%I:%M:%S', localtime())}"]
+	print('Time ' + strftime('%I:%M:%S', localtime()))
 	for stock in portfolio:
 
 		# alert_sound() Do sound if within 5% of price target. Or do it if stock up 10% from price you bought it at. 
@@ -35,13 +36,14 @@ def stock_tracker(portfolio):
 		delta_volume = cur_stats['Volume']/sum(stock.df_month.iloc[-30:]['Volume'])
 		
 		# print(sum(m5['Volume'])/5, 1.25 * sum(m30['Volume'])/30, sum(m5['Close'])/5, 1.05 * sum(m30['Close'])/30)
-		change_percentage = ((cur_stats['Close'] - prev_stats['Close'])/prev_stats['Close'])*100 
-
+		current_percentage = ((cur_stats['Close'] - prev_stats['Close'])/prev_stats['Close'])*100
+		high_percentage = ((cur_stats['High'] - prev_stats['Close'])/prev_stats['Close'])*100
+		low_percentage = ((cur_stats['Low'] - prev_stats['Close'])/prev_stats['Close'])*100
 		# info.append(f"{stock.ticker}: Current: ${cur_stats['Close']:.2f}, High: ${cur_stats['High']:.2f}, Low: ${cur_stats['Low']:.2f}"
 		# 	+ '\n' + f"Current: {change_percentage:.2f}%" + '\n' + f"High: {((cur_stats['High'] - prev_stats['Close'])/prev_stats['Close'])*100:.2f}%" + '\n')
 
 		print(f"{stock.ticker}: Current: ${cur_stats['Close']:.2f}, High: ${cur_stats['High']:.2f}, Low: ${cur_stats['Low']:.2f}"
-			+ '\n' + f"Current: {change_percentage:.2f}%" + '\n' + f"High: {((cur_stats['High'] - prev_stats['Close'])/prev_stats['Close'])*100:.2f}%" + '\n')
+			+ '\n' + f"Current: {current_percentage:.2f}%" + '\n' + f"High: {high_percentage:.2f}%" + '\n' + f'Low: {low_percentage:.2f}%' + '\n')
 	print(f'Computing time: {time() - t1:.2f}s')
 
 
@@ -51,9 +53,13 @@ weekly_tickers = ['IVV','SPY','BDX','DIA','LH','IJH','PH','GLD','SAP','MMM','QLD
 
 def trending_stocks(portfolio):
 	"""The function will display the stock's ticker and relevant information when a pattern is detected"""
-
+	"""I could potentially load the data 20-25s before displaying the stocks, would have to sleep() for less, and have a while 
+	loop in the function. So you would still have the print function displaying the old data during processing. 
+	Could make this easier by appending all of the strings that will be displayed. Then you can control when they are displayed.
+	"""
 	# Alerts if a stock triggers a variety of signals. The program displays both the ticker and the signal that was triggered.
 	# stocks_to_display = [strftime('%I:%M:%S', localtime())]
+	print(end='\n' * 2)
 	print('Time ' + strftime('%I:%M:%S', localtime()))
 	t1 = time()
 
@@ -69,11 +75,13 @@ def trending_stocks(portfolio):
 	for stock in portfolio:
 		stock.update_stock()
 		intra_day_stats = stock.df
-		cur_stats = stock.df_month.iloc[-1]
-		prev_stats = stock.df_month.iloc[-2]
-		change_percentage = ((cur_stats['Close'] - prev_stats['Close'])/prev_stats['Close'])*100 
 		try:
 			m1, m2, m15, m30 = intra_day_stats.iloc[-1:][['Volume', 'Close', '2_sma', '9_sma']], intra_day_stats.iloc[-2:][['Volume', 'Close', '2_sma', '9_sma']]/2, intra_day_stats.iloc[-15:][['Volume', 'Close', '2_sma', '9_sma']]/15, intra_day_stats.iloc[-30:][['Volume', 'Close', '2_sma', '9_sma']]/30
+			cur_stats = stock.df_month.iloc[-1]
+			prev_stats = stock.df_month.iloc[-2]
+			current_percentage = ((cur_stats['Close'] - prev_stats['Close'])/prev_stats['Close'])*100
+			high_percentage = ((cur_stats['High'] - prev_stats['Close'])/prev_stats['Close'])*100
+			low_percentage = ((cur_stats['Low'] - prev_stats['Close'])/prev_stats['Close'])*100
 		except:
 			continue
 		# Maybe detect a drop in value as well?
@@ -100,14 +108,13 @@ def trending_stocks(portfolio):
 		# 	print(stock.ticker + ' will prob go lower.')
 		if cur_stats['Volume'] > 100_000:
 			if m15.iloc[-3]['9_sma'] > m15.iloc[-3]['Close'] and m15.iloc[-2]['9_sma'] < m15.iloc[-2]['Close'] and m1.iloc[0]['9_sma'] < m1.iloc[0]['Close']:
-				print(f'{stock.ticker}, ${cur_stats["Close"]}, 9_sma crossed and held')
+				print(f'{stock.ticker}, Current Price: ${cur_stats["Close"]}, Current: {current_percentage:.2f}%, High: {high_percentage:.2f}%, Low: {low_percentage:.2f}%, 9_sma crossed and held')
 			if sum(m2['Volume']) > (1.25 * sum(m15['Volume'])) and sum(m2['Close']) > (1.015 * sum(m15['Close'])):
-				print(f'{stock.ticker}, ${cur_stats["Close"]}, 2m')
+				print(f'{stock.ticker}, Current Price: ${cur_stats["Close"]}, Current: {current_percentage:.2f}%, High: {high_percentage:.2f}%, Low: {low_percentage:.2f}%, 2m')
 			elif m1.iloc[0]['Volume'] > (1.25 * sum(m15['Volume'])) and m1.iloc[0]['Close'] > (1.015 * sum(m15['Close'])):
-				print(f'{stock.ticker}, ${cur_stats["Close"]}, 1m')
+				print(f'{stock.ticker}, Current Price: ${cur_stats["Close"]}, Current: {current_percentage:.2f}%, High: {high_percentage:.2f}%, Low: {low_percentage:.2f}%, 1m')
 
 
 	print(f'Computing time: {time() - t1:.2f}s. Average of {len(portfolio)/(time() - t1):.2f} stocks per second.')	
-	# return stocks_to_display
 
 
