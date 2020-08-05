@@ -3,11 +3,15 @@ To track the movement of your portfolio of stocks while also alerting you when t
 
 ## Built With
 
-* [yfinance](https://pypi.org/project/yfinance/) - Stock info API
+* [yfinance](https://pypi.org/project/yfinance/) - Stock data API
 
 ## Authors
 
 * **Joseph Camyre**
+
+### Additional notes
+
+Due to limits of yfinance API, 2,000 calls per hour, it is vital to stay under this limit to receive stock data.
 
 ### Plans
 
