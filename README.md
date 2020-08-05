@@ -1,2 +1,14 @@
 # Python-Trading
-My Python trading package. I am essentially halting the progess on Stocks and dedicating time to this package instead.
+To track the movement of your portfolio of stocks while also alerting you when the top movers of the day have triggered a bullish signal. 
+
+## Built With
+
+* [YFinance](https://pypi.org/project/yfinance/) - Stock info API
+
+## Authors
+
+* **Joseph Camyre**
+
+### Plans
+
+Make this a Django site. 
