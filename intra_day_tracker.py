@@ -10,10 +10,6 @@ def live_stock_data(*positions):
 	try:
 		while True:
 			if i % 15 == 0:
-				# If stock delisted, REMOVE IT FROM POSITION OBJECT
-				# Ok: so before we run the following line of code, we must loop through the new Portfolio, and if the element gives us an error,
-				# remove it. Use range(len(Portfolio())). Also, will have to pickle_biggest_movers() again.
-				# Or not? Maybe yahoo finance just buggy
 				pickle_biggest_movers(Portfolio(get_day_hot_stocks()[:51]))
 			trending_stocks(load_biggest_movers())
 			print(end='\n'*2)
