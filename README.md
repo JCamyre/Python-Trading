@@ -3,7 +3,7 @@ To track the movement of your portfolio of stocks while also alerting you when t
 
 ## Built With
 
-* [YFinance](https://pypi.org/project/yfinance/) - Stock info API
+* [yfinance](https://pypi.org/project/yfinance/) - Stock info API
 
 ## Authors
 
