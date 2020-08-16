@@ -33,7 +33,7 @@ def get_day_premarket_movers():
 	soup = BeautifulSoup(page.content, 'html.parser')
 	table = soup.find_all('table', {'id': 'tblMoversDesktop'})[0]
 	print('First list is biggest winners, second list is from a different website.')
-	marketwatch_list = [(ticker.get_text(), float(change.get_text()[:-1])) for ticker, change in zip(table.find_all('td', {'class': 'tdSymbol'}), table.find_all('td', {'class': 'tdChangePct'}))]
+	marketwatch_list = [(ticker.get_text(), float(change.get_text()[:-1].replace(',',''))) for ticker, change in zip(table.find_all('td', {'class': 'tdSymbol'}), table.find_all('td', {'class': 'tdChangePct'}))]
 
 	url = 'https://www.benzinga.com/money/premarket-movers/'
 	page = get(url)

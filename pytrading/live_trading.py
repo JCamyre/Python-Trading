@@ -28,12 +28,15 @@ def stock_tracker(portfolio):
 	for stock in portfolio:
 
 		# alert_sound() Do sound if within 5% of price target. Or do it if stock up 10% from price you bought it at. 
-		stock.update_stock()
-		cur_stats = stock.df_month.iloc[-1]
-		prev_stats = stock.df_month.iloc[-2]
-		intra_day_stats = stock.df
-		m1, m5, m15, m30 = intra_day_stats.iloc[-1:][['Volume', 'Close']], intra_day_stats.iloc[-5:][['Volume', 'Close']]/5, intra_day_stats.iloc[-15:][['Volume', 'Close']]/5, intra_day_stats.iloc[-30:][['Volume', 'Close']]/5
-		delta_volume = cur_stats['Volume']/sum(stock.df_month.iloc[-30:]['Volume'])
+		try:
+			stock.update_stock()
+			cur_stats = stock.df_month.iloc[-1]
+			prev_stats = stock.df_month.iloc[-2]
+			intra_day_stats = stock.df
+			m1, m5, m15, m30 = intra_day_stats.iloc[-1:][['Volume', 'Close']], intra_day_stats.iloc[-5:][['Volume', 'Close']]/5, intra_day_stats.iloc[-15:][['Volume', 'Close']]/5, intra_day_stats.iloc[-30:][['Volume', 'Close']]/5
+			delta_volume = cur_stats['Volume']/sum(stock.df_month.iloc[-30:]['Volume'])
+		except:
+			continue
 		
 		# print(sum(m5['Volume'])/5, 1.25 * sum(m30['Volume'])/30, sum(m5['Close'])/5, 1.05 * sum(m30['Close'])/30)
 		current_percentage = ((cur_stats['Close'] - prev_stats['Close'])/prev_stats['Close'])*100
@@ -44,14 +47,11 @@ def stock_tracker(portfolio):
 
 		print(f"{stock.ticker}: Current: ${cur_stats['Close']:.2f}, High: ${cur_stats['High']:.2f}, Low: ${cur_stats['Low']:.2f}"
 			+ '\n' + f"Current: {current_percentage:.2f}%" + '\n' + f"High: {high_percentage:.2f}%" + '\n' + f'Low: {low_percentage:.2f}%' + '\n')
-	print(f'Computing time: {time() - t1:.2f}s')
 
-
-weekly_tickers = ['IVV','SPY','BDX','DIA','LH','IJH','PH','GLD','SAP','MMM','QLD','LLY','MTUM','LQD','EBON','BSIG','AMKR','TSM','OSTK','MFG','SPWR','BVN','SOXL','LTRPA','KLIC','MELI','CSIQ','BBD','ANH','CWH','CC','NVCN','GSX','LL','SID','ABEV','SE','CX','LSCC','SCCO','ACCD','MDLA','PS','ELY','SEM','BRZU','ARAY','ALXN','JKS','PDD','FTCH','ICHR','STNE','SEDG','CHNG','AVTR','GT','GPRO','DDD','PAYS','ATHM','IOVA','BCC','AA','BIIB','FLEX','LPX','BECN','NAVI','SHOP','INVA','REGN','FOLD','KLAC','NET','ETSY','EDC','CRON','MDRX','FBHS','GLW','SDC','LEN','PKI','PD','STM','JELD','SPWH','MAXR','KBH','PHM','DHI','LW','EBAY','ON','CRWD','ANET','GGB','QCOM','CCC','SMTC','LITE','ST','CIEN','SMH','DDOG','RYN','AMAT','ASML','NOK','GRMN','TAL','IFRX','MTOR','PSEC','CLF','LEG','MAS','SQ','PMT','BHP','NXPI','AN','CVA','EWZ','BBL','LRCX','FDX','LBTYA','GDOT','NFLX','CNQ','SWK','CCJ','HAIN','MU','ROKU','GKOS','GRUB','BGS','DKS','LBRT','LBTYK','RIO','FCX','OI','BRKR','JD','BILI','DOCU','XHB','PTON','STOR','INTU','YNDX','ADI','ERIC','GMED','CRMD','SOXX','CTB','AYX','OC','MS','INFN','ALC','AXL','SNE','RPRX','GLNG','IRDM','MXIM','NTR','ARNA','GNTX','IBB','IQV','LULU','AKAM','CDNS','NKTR','CREE','HCAT','PHG','RH','EWW','MHK','HPQ','NUE','PLAN','DLR','CTSH','MRK','NOW','INFY','EQIX','MNST','JNPR','PBR','EMN','ICPT','AAPL','CSTM','ALV','OLLI','MBT','ACC','REGI','JHG','CPRX','BOTZ','CRUS','SNAP','SRC','ANGI','ATVI','PM','NVDA','FMX','CDK','OSK','GNRC','HP','LEA','PRGO','SPG','BKI','BR','KC','STLD','CG','CPRT','LXP']
 
 # Detect stocks crossing the 9 MA + RSI below 45. For 9 MA crossing, maybe wait for it to cross above and be greater than for one/two periods (sum(m2['Close']) > sum(m2['9_sma']))
 
-def trending_stocks(portfolio):
+def trending_stocks(portfolio, *signals):
 	"""The function will display the stock's ticker and relevant information when a pattern is detected"""
 	"""I could potentially load the data 20-25s before displaying the stocks, would have to sleep() for less, and have a while 
 	loop in the function. So you would still have the print function displaying the old data during processing. 
@@ -63,8 +63,12 @@ def trending_stocks(portfolio):
 	print('Time ' + strftime('%I:%M:%S', localtime()))
 	t1 = time()
 
+	good_stocks = []
+
 	# Maybe periodically update the hottest stocks (ten mins)
 	# Show new stocks that are hot rn (very recently percent_change increase)
+
+	signal_list = []
 
 	def detect_pennant(intra_day):
 		first, second, third, last = intra_day.iloc[-48:-36], intra_day.iloc[-36:-24], intra_day.iloc[-24:-12], intra_day.iloc[-12:]
@@ -72,10 +76,56 @@ def trending_stocks(portfolio):
 		pattern = len([i for i in range(3) if deltas[i] > deltas[i+1]]) >= 2
 		return pattern, deltas
 
+	def spike_1ma():
+		if m1.iloc[0]['Volume'] > (1.25 * sum(m15['Volume'])) and m1.iloc[0]['Close'] > (1.015 * sum(m15['Close'])):
+			print(f'{stock.ticker}, Current Price: ${cur_stats["Close"]}, Current: {current_percentage:.2f}%, High: {high_percentage:.2f}%, Low: {low_percentage:.2f}%, 1m')
+			good_stocks.append(stock)		
+
+	def spike_2ma():
+		if sum(m2['Volume']) > (1.25 * sum(m15['Volume'])) and sum(m2['Close']) > (1.015 * sum(m15['Close'])):
+			print(f'{stock.ticker}, Current Price: ${cur_stats["Close"]}, Current: {current_percentage:.2f}%, High: {high_percentage:.2f}%, Low: {low_percentage:.2f}%, 2m')
+			good_stocks.append(stock)
+
+	def basing():
+		basing = intra_day_stats[-50:].nsmallest(5, ['Low'])['Low'].sort_values(ascending=True)
+		basing = [price for price in basing[1:] if basing[0]*1.01 >= price] 
+		print('Basing: ', basing, stock.ticker)
+
+	def cross_9ma():
+		if m15.iloc[-3]['9_sma'] > m15.iloc[-3]['Close'] and m15.iloc[-2]['9_sma'] < m15.iloc[-2]['Close'] and m1.iloc[0]['9_sma'] < m1.iloc[0]['Close']:
+			print(f'{stock.ticker}, Current Price: ${cur_stats["Close"]}, Current: {current_percentage:.2f}%, High: {high_percentage:.2f}%, Low: {low_percentage:.2f}%, 9_sma crossed and held')
+			good_stocks.append(stock)		
+
+	def double_bottom():
+		# Double_bottom, maybe the values have to be 10 mins apart or more
+		bottom = intra_day_stats[-50:].nsmallest(5, ['Low'])['Low'].sort_values(ascending=True)
+		bottom = [price for price in bottom[1:] if bottom[0]*1.01 >= price] 
+		print(stock.ticker, 'Bottom: ', bottom)		
+
+	def double_top():
+		top = intra_day_stats[-50:].nsmallest(10, ['Low'])['Low'].sort_values(ascending=False)
+		top = [price for price in top[1:] if top[0] <= price*1.01]
+		print(stock.ticker, 'Top: ', top)
+
+	if '1ma' in signals:
+		signal_list.append(spike_1ma)
+	if '2ma' in signals:
+		signal_list.append(spike_2ma)
+	if '9ma_cross' in signals:
+		signal_list.append(cross_9ma)
+	if 'double_bottom' in signals:
+		signal_list.append(double_bottom)
+	if 'double_top' in signals:
+		signal_list.append(double_top)
+	if 'basing' in signals:
+		signal_list.append(basing)
+
+	print([func.__name__ for func in signal_list])
+
 	for stock in portfolio:
-		stock.update_stock()
-		intra_day_stats = stock.df
 		try:
+			stock.update_stock()
+			intra_day_stats = stock.df
 			m1, m2, m15, m30 = intra_day_stats.iloc[-1:][['Volume', 'Close', '2_sma', '9_sma']], intra_day_stats.iloc[-2:][['Volume', 'Close', '2_sma', '9_sma']]/2, intra_day_stats.iloc[-15:][['Volume', 'Close', '2_sma', '9_sma']]/15, intra_day_stats.iloc[-30:][['Volume', 'Close', '2_sma', '9_sma']]/30
 			cur_stats = stock.df_month.iloc[-1]
 			prev_stats = stock.df_month.iloc[-2]
@@ -84,37 +134,25 @@ def trending_stocks(portfolio):
 			low_percentage = ((cur_stats['Low'] - prev_stats['Close'])/prev_stats['Close'])*100
 		except:
 			continue
+
 		# Maybe detect a drop in value as well?
 		# print('30 min high', stock.ticker, m30.max(), m30.idxmax())
 		# print(m1['9_sma'])
 
-		# Don't care about (and cur_stats['Volume'] > 100_000) for now 
-		# Need a better system for encompassing the most amount of stocks that may move
 
-		# Double_bottom
-		# bottom = intra_day_stats[-50:].nsmallest(5, ['Low'])['Low'].sort_values(ascending=True)
-		# bottom = [price for price in bottom[1:] if bottom[0]*1.01 >= price]
 		# if len(bottom) > 0:
 		# 	print(f'{stock.ticker} bottom @ {bottom[0]}')
 
-		# Double_top
-		# top = intra_day_stats[-50:].nsmallest(10, ['Low'])['Low'].sort_values(ascending=False)
-		# top = [price for price in top[1:] if top[0] <= price*1.01]
+		# General uptrend: can track this through 50 SMA crossing 200 SMA/100
 
-		# pennant = detect_pennant(intra_day_stats)
-
-
-		# if m15.iloc[-2]['2_sma'] < m15.iloc[-2]['Close'] and sum(m2['2_sma']) > sum(m2['Close']):
-		# 	print(stock.ticker + ' will prob go lower.')
+		# OR COULID DO PUT ALL OF THE DESIRED FUNCTIONS IN A LIST AND LOOP THROUGH THEM FOR EVERY STOCK. CHOOSE WHICH FUNCTIONS
+		# BY DOING THIS IF STATEMENT AT THE START 
 		if cur_stats['Volume'] > 100_000:
-			if m15.iloc[-3]['9_sma'] > m15.iloc[-3]['Close'] and m15.iloc[-2]['9_sma'] < m15.iloc[-2]['Close'] and m1.iloc[0]['9_sma'] < m1.iloc[0]['Close']:
-				print(f'{stock.ticker}, Current Price: ${cur_stats["Close"]}, Current: {current_percentage:.2f}%, High: {high_percentage:.2f}%, Low: {low_percentage:.2f}%, 9_sma crossed and held')
-			if sum(m2['Volume']) > (1.25 * sum(m15['Volume'])) and sum(m2['Close']) > (1.015 * sum(m15['Close'])):
-				print(f'{stock.ticker}, Current Price: ${cur_stats["Close"]}, Current: {current_percentage:.2f}%, High: {high_percentage:.2f}%, Low: {low_percentage:.2f}%, 2m')
-			elif m1.iloc[0]['Volume'] > (1.25 * sum(m15['Volume'])) and m1.iloc[0]['Close'] > (1.015 * sum(m15['Close'])):
-				print(f'{stock.ticker}, Current Price: ${cur_stats["Close"]}, Current: {current_percentage:.2f}%, High: {high_percentage:.2f}%, Low: {low_percentage:.2f}%, 1m')
-
+			for signal in signal_list:
+				signal()
+			
 
 	print(f'Computing time: {time() - t1:.2f}s. Average of {len(portfolio)/(time() - t1):.2f} stocks per second.')	
 
+	return good_stocks
 
