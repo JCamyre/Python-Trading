@@ -65,7 +65,7 @@ def trending_stocks(portfolio, *signals):
 
 	good_stocks = []
 
-	# Maybe periodically update the hottest stocks (ten mins)
+	# Maybe periodically update the hottest stocks (ten mins) 
 	# Show new stocks that are hot rn (very recently percent_change increase)
 
 	signal_list = []
