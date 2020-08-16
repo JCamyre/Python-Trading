@@ -40,4 +40,3 @@ def live_stock_data(*positions):
 			print(f'{time()-t1:.2f}s')
 	except KeyboardInterrupt:
 		return
-
