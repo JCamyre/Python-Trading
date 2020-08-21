@@ -19,17 +19,20 @@ from time import sleep, time
 # with very minimal logic, 4.23 stocks/second
 # Take the 3600s/(2000/(number of stocks)) THEN WAIT that amount of time every loop 
 
-def live_stock_data(*positions):
+def live_stock_data():
+	user_signals = input('Please enter the signals you want to be tracked, with spaces in between. The current available signals are: \
+		1ma, 2ma, 9ma_cross, double_bottom, double_top, basing: ').split()
+	user_positions = input('Please enter the tickers of the stocks you want to track independently, with spaces in between: ').split()
 	pickle_biggest_movers(Portfolio(get_day_hot_stocks()[:51]))
-	pickle_positions(Portfolio(positions))
-	delay = 3600/(2000/(50 + len(positions)))
+	pickle_positions(Portfolio(user_positions))
+	delay = 3600/(2000/(50 + len(user_positions)))
 	i = 0
 	try:
 		while True:
 			t1 = time()
 			if i % 5 == 0:
 				pickle_biggest_movers(Portfolio(get_day_hot_stocks()[:51]))
-			trending_stocks(load_biggest_movers(), '2ma', '1ma', '9ma_cross', 'double_bottom')
+			trending_stocks(load_biggest_movers(), user_signals)
 			print(end='\n'*2)
 			stock_tracker(load_positions())
 			time_elapsed = time() - t1
