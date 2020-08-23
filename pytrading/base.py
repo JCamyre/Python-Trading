@@ -19,6 +19,7 @@ For None values, could assume it's a suspension
 class Ticker:
 
 	def __init__(self, ticker):
+		# Could use 'https://query2.finance.yahoo.com/v8/finance/chart/' if query1 doesn't work
 		self._base_url = 'https://query1.finance.yahoo.com/v8/finance/chart/'
 
 		self.ticker = ticker.upper()
@@ -28,12 +29,10 @@ class Ticker:
 
 	def get_data(self, interval='1m', period='1d', start=None, end=_datetime.datetime.today(), proxy=None):
 		if start is None:
+			# Valid ranges: '1d', '5d', '1mo', '3mo', '6mo', '1y', '2y', '5y', '10y', 'ytd', 'max'
 			params = {'range': period}
 		else:
 			params = {'period1': start, 'period2': end}
-
-		# Valid ranges: '1d', '5d', '1mo', '3mo', '6mo', '1y', '2y', '5y', '10y', 'ytd', 'max'
-		params['range'] = period
 
 		# Valid intervals: 
 		params['interval'] = interval.lower()
@@ -58,7 +57,10 @@ class Ticker:
 
 		df = _pd.DataFrame(data['chart']['result'][0]['indicators']['quote'][0], index=data['chart']['result'][0]['timestamp'])
 		df = df.round(decimals=2)
-		df.index = list(map(lambda x: _datetime.datetime.fromtimestamp(x), df.index))
+		if interval == '1d':
+			df.index = list(map(lambda x: _datetime.datetime.fromtimestamp(x).date(), df.index))			
+		else:
+			df.index = list(map(lambda x: _datetime.datetime.fromtimestamp(x), df.index))
 		df = df[['close', 'high', 'low', 'open', 'volume']]
 		df.columns = list(map(lambda name: name.capitalize(), df.columns))
 

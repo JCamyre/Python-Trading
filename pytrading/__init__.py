@@ -1,27 +1,24 @@
 '''This package contains modules with functions that assist day traders by aiding them in keeping track of their positions 
 and trending stocks, to hopefully make money on a day trade.'''
 from datetime import date 
-import yfinance as yf 
+from base import Ticker
 
 class Portfolio:
 	# Maybe do a DataFrame? Easier to display, can sort. Columns for tickers, change_percentage, last_updated_price
 	# Pass in stocks with their target values, like this: (stock, target_prices)
-	def __init__(self, stocks=None):
-		# print(stocks[0], isinstance(stocks[0], str))
+	def __init__(self, interval, period, stocks=None):
+		if type(stocks) == tuple:
+			stocks = stocks[0]
+
 		if type(stocks[0]) == str:
-			self.stocks = [Stock(stock) for stock in sorted(stocks)]
+			self.stocks = [Stock(stock, interval=interval, period=period) for stock in sorted(stocks)]
 		else:
 			self.stocks = sorted(stocks, key=lambda x: x.ticker)
 
-	def sort_by(self, sort='name'):
-		if sort == 'name':
-			pass
-		elif sort == 'change_percentage':
-			pass
-		elif sort == 'price':
-			pass
-		else:
-			raise Exception('Please enter one of the following sorting methods: name, price, or change_percentage')
+	def clean_stocks(self):
+		for stock in self.stocks:
+			if 'trash' in stock.ticker:
+				self.stocks.remove(stock)
 
 	def get_biggest_movers(self):
 		print("These are today's biggest movers: ")
@@ -45,6 +42,16 @@ class Portfolio:
 	def get_stocks_intra(self):
 		return [stock.df for stock in self.stocks]
 
+	def sort_by(self, sort='name'):
+		if sort == 'name':
+			pass
+		elif sort == 'change_percentage':
+			pass
+		elif sort == 'price':
+			pass
+		else:
+			raise Exception('Please enter one of the following sorting methods: name, price, or change_percentage')
+
 	def update_price_change(self):
 		print("These stocks' prices have changed significantly.")
 		for stock in self.stocks:
@@ -66,14 +73,15 @@ class Portfolio:
 
 class Stock:
 
-	def __init__(self, ticker, target_prices=None, price_invested=None):
+	def __init__(self, ticker, interval='1m', period='1d', target_prices=None, price_invested=None):
 		self.ticker = ticker
-		self.df = get_intra_day_data(self.ticker)
-		self.df_month = get_month_data(self.ticker)
+		self.df = Ticker(ticker).get_data(interval, period)
+		# self.df_month = Ticker(ticker).get_data(interval='1d', period='1mo')
+		# self.df_month.index = list(map(lambda x: x.date(), self.df_month.index))
 		try:
 			self._last_updated_price = self.df.iloc[-1]['Close']
 		except:
-			print(f'{ticker} is a bad stock.')
+			pass
 		self.target_prices = target_prices
 		self.price_invested = price_invested
 
@@ -103,33 +111,23 @@ class Stock:
 		self.df = get_intra_day_data(self.ticker)
 		self.df_month = get_month_data(self.ticker)
 
-
-def get_intra_day_data(ticker, interval='1m', today=True):
-	if today:
-		today = date.today()
-		ticker = yf.Ticker(ticker).history(period='1d', interval=interval, prepost=True, actions=False).loc[today.strftime('20' + '%y-%m-%d') + ' 09:30:00-04:00':]
-	else:
-		ticker = yf.Ticker(ticker).history(period='3d', interval=interval, prepost=True, actions=False)
-	for i in range(9, ticker.shape[0]):
-		ticker.loc[ticker.index[i], '9_sma'] = sum([float(i) for i in ticker.iloc[i-9:i]['Close']])/9
-	for i in range(20, ticker.shape[0]):
-		ticker.loc[ticker.index[i], '20_sma'] = sum([float(i) for i in ticker.iloc[i-20:i]['Close']])/20
-
-	# ticker['13_sma'] = ticker['Close'].iloc[12:].apply(lambda close: close.iloc[-13:].mean(axis=1))
-	ticker = ticker.drop(columns=['Open'])
-	return ticker
-
-def get_month_data(ticker, interval='1d'):
-	ticker = yf.Ticker(ticker).history(period='1mo', interval=interval, prepost=True, actions=False)
-	return ticker
+	def __str__(self):
+		return self.ticker
 
 
-print('Welcome to the greatest Python trading module on Earth!')
+print(Stock('AAPL').df)
+
+# 	for i in range(2, ticker.shape[0]):
+# 		ticker.loc[ticker.index[i], '2_sma'] = sum([float(i) for i in ticker.iloc[i-2:i]['Close']])/2
+# 	for i in range(9, ticker.shape[0]):
+# 		ticker.loc[ticker.index[i], '9_sma'] = sum([float(i) for i in ticker.iloc[i-9:i]['Close']])/9
+# 	try:
+# 		ticker = ticker[['Close', 'High', 'Low', '2_sma', '9_sma', 'Volume']]
+# 	except:
+# 		pass
+
+print('Welcome to PyTrading!')
 
 if __name__ == '__main__':
 	# You can use this to test code out without it being imported/ran 
-	from download_tickers import get_todays_biggest_movers
-	print('Welcome to the greatest Python trading module on Earth! Again.')
-
-# put classes/methods in here
-
+	pass
