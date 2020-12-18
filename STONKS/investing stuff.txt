@@ -1,0 +1,15 @@
+Call:
+You buy 20 calls (100 shares per) for ROKU @107.50. 
+The stock goes up to $195.87. 
+You use the option, buying total of 400 shares @107.50.
+Net profit: [2000 * (195.87 - 107.50)] - the premium of the calls
+BTW: You can also sell the option and make a profit, if the stock goes above $107.50
+
+Put:
+You are given the right to sell a company @ $25 for a premium.
+The stock goes to $10. 
+This means that you can either sell the option for profit, or buy the stock @ $10, and
+sell it for $25 a share
+Profit
+
+What about just buying the dip because the stock is just following the Dow Jones?

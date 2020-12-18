@@ -1,19 +1,20 @@
 '''This package contains modules with functions that assist day traders by aiding them in keeping track of their positions 
 and trending stocks, to hopefully make money on a day trade.'''
 from datetime import date 
-from base import Ticker
+from .base import Ticker
 
 class Portfolio:
 	# Maybe do a DataFrame? Easier to display, can sort. Columns for tickers, change_percentage, last_updated_price
 	# Pass in stocks with their target values, like this: (stock, target_prices)
-	def __init__(self, interval, period, stocks=None):
-		if type(stocks) == tuple:
-			stocks = stocks[0]
+	def __init__(self, stocks, interval, period):
+		# if type(stocks) == tuple:
+		# 	self.stocks = stocks[0]
 
-		if type(stocks[0]) == str:
-			self.stocks = [Stock(stock, interval=interval, period=period) for stock in sorted(stocks)]
-		else:
-			self.stocks = sorted(stocks, key=lambda x: x.ticker)
+		# if type(stocks[0]) != str:
+		# 	while stocks[0] != str:
+		# 		stocks = stocks[0]
+		# 		print(stocks)
+		self.stocks = [Stock(stock, interval=interval, period=period) for stock in sorted(stocks)]
 
 	def clean_stocks(self):
 		for stock in self.stocks:
@@ -76,8 +77,8 @@ class Stock:
 	def __init__(self, ticker, interval='1m', period='1d', target_prices=None, price_invested=None):
 		self.ticker = ticker
 		self.df = Ticker(ticker).get_data(interval, period)
-		# self.df_month = Ticker(ticker).get_data(interval='1d', period='1mo')
-		# self.df_month.index = list(map(lambda x: x.date(), self.df_month.index))
+		self.prev_close = Ticker(ticker).get_data('1d', '2d').iloc[0]['Close']
+		print('prev_close', self.prev_close)
 		try:
 			self._last_updated_price = self.df.iloc[-1]['Close']
 		except:
@@ -114,8 +115,6 @@ class Stock:
 	def __str__(self):
 		return self.ticker
 
-
-print(Stock('AAPL').df)
 
 # 	for i in range(2, ticker.shape[0]):
 # 		ticker.loc[ticker.index[i], '2_sma'] = sum([float(i) for i in ticker.iloc[i-2:i]['Close']])/2

@@ -1,0 +1,94 @@
+# simplestatistics changelog
+
+## 0.4.0
+
+2017-11-16
+
+### Added
+
+- `covariance()` - calculate sample covariance
+- `add_to_mean()` - calculates new mean after adding value(s)
+- `sinh()` - hyperbolic function (sinh)
+- `cosh()` - hyperbolic function (cosh)
+- `tanh()` - hyperbolic function (tanh)
+- `gamma_function()`
+- `beta()`
+
+## 0.3.0
+
+2016-12-03
+
+### Added
+
+- `error_function()` - Gauss error function
+- `chi_squared_dist_table()` - A table of χ2 values vs p-values
+- `bernoulli()` - the Bernoulli distribution
+- `poisson()` - the Poisson distribution
+
+## 0.2.5
+
+2016-09-24
+
+### Added
+
+- `harmonic_mean()`
+- `bayesian_classfier()`
+- `perceptron()`
+- `coefficient_of_variation()` (Thanks to Lidiane Taquehara (lidimayra))
+
+### Improved
+
+- Allow user to specify `sample = False` in `standard_deviation()`,
+`coefficient_of_variation()`, `z_scores()` (Thanks to Lidiane Taquehara
+(lidimayra))
+
+## 0.2.0
+
+2016-08-27
+
+### Added
+
+- `linear_regression_line()` returns a function that, provided with a (m, b)
+tuple, where m is the slope and b is the y intercept, calculates y values
+based on given x values.
+- `root_mean_square()`
+- `interquartile_range()`
+- `sum_nth_power_deviations()` to calculate sum of the deviations raised to Nth power.
+
+## 0.1.5
+
+2016-07-30
+
+### Added
+
+- `factorial()`
+- `choose()`
+- `binomial()` to calculate binomial distribution probabilities
+- `normal()` to calculate normal distribution probabilities
+- `kurtosis()` to calculate kurtosis/"tailedness" of a probability distribution of a variable
+_ `skew()` to calculate Pearson's moment coefficient of skewness
+- `linear_regression()` to calculate slope (m) and y intercept (b) of line of
+best fit.
+
+
+### Improved
+
+- Reorganized documentation.
+
+### Improved
+
+- 100% test coverage
+
+## 0.1.3
+
+2016-06-06
+
+### Added
+
+Functions for calculating correlation coefficients, products of vectors,
+quantiles, and sums.
+
+- `correlate()`
+- `product()`
+- `quantiles()`
+- `sum()`

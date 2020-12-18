@@ -1,0 +1,65 @@
+JNUG, JDST: Trade both sides of the intra-day movement
+This guy says for intra-day trading strats: 
+
+BUY QH?
+
+Asian grill said: look for the price levels with huge volume, the gaps, each line touches multiple times, EMA indictators
+
+Zip Trader said: "riding price strength", Buy in above 9 MA (crosses and holds above), eventually crosses over 180 MA and oversold RSI (not all at the same time) (confirmation), sell at overbought RSI and crosses below 9 MA (validation), his whole theory is only take clean trades with good confirmation (trade like spoiled brats), lock in profits rather than hoping it will go back up, cause worst case scenario is nothing and best case scenario is you make money. If the same set up comes up again in the same stock, do it agane. 
+Only works in a general up trend for the stock, so wait for that turn around, or can be risky and see if you can scalp a couple bucks real quick 
+If stock respect 9 SMA. 
+First 30 mins of market open.  
+Price rejection from 180 SMA
+
+WAS KODK day 2 due to short squeeze?
+
+New plan: For the 30 minutes after market open, look for quick dip with confirmation and buy in, and I just want to get involved in the early part of the action.
+
+ARLO: Gap to 7, 5, 4.6
+
+Higher % stop loss
+
+New things:
+Start doing high risk trades? Meaning first 30 min trading, stocks currently trending (but like breaking out now/holding through market close). Like KODK, KNDI.
+Yes: $500-1000 risk on either holding after market close or first 30 min or break out
+What tools could help me with this quest for high risk high reward?
+
+What's holding me back: laziness, not hyped, bad mindset, ego/pride (thinking about what others would think about my career)
+
+Getting premarket movers -> reading charts -> getting list of 5-10 interesting stocks -> drawing/writing SR levels -> strategies with 
+enter/exit prices -> be dynamic, sometimes things do not go to plan (breakout or plummet) -> stop losses
+
+If a stock goes through resistance, but falls back on resistance can be either acting as support or could just fall through
+
+Get low float stocks. High short interest
+Look for super basing penny stocks/RSI low
+Day 3/4 Penny stocks
+
+BUY SOME AT 10, 11, 12, SELL SOME AT 15, BUY SOME AT 13 14 15, SELL SOME AT 18, ....
+Buying trending stocks a few days later, if the chart looks constructive and with support. Has to drop a lot hto.
+Ascending/descending triangle. Ascending: High lows, fighting resistance level, breakout. Descending: Lower highs, fighting support level, drop.
+Stop loss 1 ATR? Low float stocks
+
+Stocks under two billion market cap, low float
+
+Buy on overreaction losses, but only when it shows signs of recovering (good buying volume, respects SMA, passes 180/200 SMA)
+Buy an overreaction sell off intra day? 
+
+Buy the channel stocks, where there is a diagonal line for high and low, but don't just buy where you think bottom is make sure there are good factors (what word does he use?) Elevating factor
+
+Consolidation/symmetrical triangle: lower highs, higher lows
+
+Reverse symmetrical triangle/broadening top/broadening bottom
+
+Why crossing and staying above 9 SMA moves aren't made equal: 
+Previous resistance level is new support. So the first SMA move worked because that resistance became support, but for the second SMA move, there was no resistance to become new support. 
+Sharp selling off crossing below the SMA line (which happened before the first SMA move, and later became support) is much different than the struggle of price strength crossing above and below the SMA line near the second SMA move. 
+Additionally for the first SMA move we were below the fair value RSI (50 and below), but the second move we were above 50
+
+Guide for selling:
+Two types: overextended and undervalued
+For undervalued/oversold stocks: Just sell at "validation point", which is when stock closes and holds below validation SMA (which is 2 SMA) 
+So he has 9 SMA and 2 SMA. So if stock sells below and stays below 2 SMA for one period, sell. s
+
+For overextended/risky: 
+If the stock price is moving too close towards the 9 SMA (price weakening), these are early signs of bear reversal, so get out now. You don't want to risk it with these crazy stocks.  

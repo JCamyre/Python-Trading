@@ -25,6 +25,7 @@ def stock_tracker(portfolio):
 	t1 = time()
 	info = [f"Time: {strftime('%I:%M:%S', localtime())}"]
 	print('Time ' + strftime('%I:%M:%S', localtime()))
+	print([(stock.ticker, stock.df) for stock in portfolio])
 	for stock in portfolio:
 
 		# alert_sound() Do sound if within 5% of price target. Or do it if stock up 10% from price you bought it at. 
@@ -45,13 +46,13 @@ def stock_tracker(portfolio):
 		# info.append(f"{stock.ticker}: Current: ${cur_stats['Close']:.2f}, High: ${cur_stats['High']:.2f}, Low: ${cur_stats['Low']:.2f}"
 		# 	+ '\n' + f"Current: {change_percentage:.2f}%" + '\n' + f"High: {((cur_stats['High'] - prev_stats['Close'])/prev_stats['Close'])*100:.2f}%" + '\n')
 
-		print(f"{stock.ticker}: Current: ${cur_stats['Close']:.2f}, High: ${cur_stats['High']:.2f}, Low: ${cur_stats['Low']:.2f}"
+		print(f"{stock.ticker.upper()}: Current: ${cur_stats['Close']:.2f}, High: ${cur_stats['High']:.2f}, Low: ${cur_stats['Low']:.2f}"
 			+ '\n' + f"Current: {current_percentage:.2f}%" + '\n' + f"High: {high_percentage:.2f}%" + '\n' + f'Low: {low_percentage:.2f}%' + '\n')
 
 
 # Detect stocks crossing the 9 MA + RSI below 45. For 9 MA crossing, maybe wait for it to cross above and be greater than for one/two periods (sum(m2['Close']) > sum(m2['9_sma']))
 
-def trending_stocks(portfolio, *signals):
+def trending_stocks(portfolio, signals):
 	"""The function will display the stock's ticker and relevant information when a pattern is detected"""
 	"""I could potentially load the data 20-25s before displaying the stocks, would have to sleep() for less, and have a while 
 	loop in the function. So you would still have the print function displaying the old data during processing. 
@@ -121,6 +122,7 @@ def trending_stocks(portfolio, *signals):
 		signal_list.append(basing)
 
 	print([func.__name__ for func in signal_list])
+	print([(stock.ticker, stock.df) for stock in portfolio])
 
 	for stock in portfolio:
 		try:

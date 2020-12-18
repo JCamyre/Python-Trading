@@ -14,7 +14,10 @@ proxies = {
 r = requests.get(“http://toscrape.com”, proxies=proxies)
 
 Things to add:
-For None values, could assume it's a suspension
+For None values, if the value before and after are within a couple percent, fill na with average of two, else it's a suspension
+https://stackoverflow.com/questions/44032771/fill-cell-containing-nan-with-average-of-value-before-and-after
+df.val[:-1] = 
+https://stackoverflow.com/questions/44111425/cannot-use-fillna-when-a-condition-is-introduced
 """
 class Ticker:
 
@@ -52,8 +55,12 @@ class Ticker:
 		data = data.json()
 
 		if data['chart']['error']:
-			print(f'An error has occurred while accessing Yahoo for {self.ticker}')
-			return None
+			url = 'https://query2.finance.yahoo.com/v8/finance/chart/' + self.ticker
+			data = _requests.get(url=url, params=params, proxies=proxy)
+			data = data.json()
+			if data['chart']['error']:
+				print(f'An error has occurred while accessing Yahoo\'s Finance api for {self.ticker}')
+				return None
 
 		df = _pd.DataFrame(data['chart']['result'][0]['indicators']['quote'][0], index=data['chart']['result'][0]['timestamp'])
 		df = df.round(decimals=2)
@@ -66,6 +73,4 @@ class Ticker:
 
 		return df
 
-ttm = Ticker('kodk')
-ttm.get_data()
 

@@ -1,0 +1,5 @@
+Trading penny stocks only 10% from support or less
+KODK: 17, 15, 12, 9.8, 8, 7, 6
+FRAN: 22, 19, 10.5, 9.5, 8
+SPPI: 10.5, 8.5, 4.1
+OCGN: 1.6, 0.8

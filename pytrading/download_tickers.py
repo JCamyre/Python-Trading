@@ -32,17 +32,28 @@ def get_day_premarket_movers():
 	page = get(url)
 	soup = BeautifulSoup(page.content, 'html.parser')
 	table = soup.find_all('table', {'id': 'tblMoversDesktop'})[0]
-	print('First list is biggest winners, second list is from a different website.')
-	marketwatch_list = [(ticker.get_text(), float(change.get_text()[:-1].replace(',',''))) for ticker, change in zip(table.find_all('td', {'class': 'tdSymbol'}), table.find_all('td', {'class': 'tdChangePct'}))]
+	try:
+		print('Biggest winners from TheStockMarketWatch:')
+		marketwatch_list = [(ticker.get_text(), float(change.get_text()[:-1].replace(',',''))) for ticker, change in zip(table.find_all('td', {'class': 'tdSymbol'}), table.find_all('td', {'class': 'tdChangePct'}))]
+		for i, j in sorted(marketwatch_list, key=lambda x: x[1], reverse=True):
+			print(i, j)
+	except:
+		print('Due to unseen errors, the stockmarketwatch list is unable to be reached.')
 
 	url = 'https://www.benzinga.com/money/premarket-movers/'
 	page = get(url)
 	soup = BeautifulSoup(page.content, 'html.parser')
-	table = soup.find('ul', {'class': 'stock-list'})
-	benzinga_list = [(ticker.get_text(), float(change.get_text()[:-1])) for ticker, change in zip(table.find_all('a'), table.find_all('span', {'class': 'flex-item-result company-ticker-gain'}))]
+	div = soup.find('div', {'id': 'movers-stocks-table-gainers'})
+	tbody = div.find('tbody')
+	data = [(i.get_text().replace('\n    ', '')[2:], float(j.get_text().replace('\n  ', '')[2:-1])) for i, j in zip(tbody.find_all('a', {'class': 'font-normal'}), tbody.find_all('td')[3::5])]
+	try:
+		print('Biggest winners from Benzinga:')
+		for ticker, percentage in data:
+			print(ticker, percentage)
+	except:
+		print('Due to unseen errors, the Benzinga list is unable to be reached.')
 
-	print(sorted(marketwatch_list, key=lambda x: x[1], reverse=True))
-	print(sorted(benzinga_list, key=lambda x: x[1], reverse=True))
+get_day_premarket_movers()
 
 def get_silver_stocks():
 	url = 'http://www.24hgold.com/english/listcompanies.aspx?fundamental=datas&data=company&commodity=ag&commodityname=SILVER&sort=resources&iordre=107'

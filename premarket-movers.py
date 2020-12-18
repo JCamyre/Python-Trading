@@ -1,0 +1,3 @@
+from pytrading.download_tickers import get_day_premarket_movers
+
+get_day_premarket_movers()
