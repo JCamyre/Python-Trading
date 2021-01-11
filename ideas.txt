@@ -1,0 +1,2 @@
+GUI: For the top earners on the day or for your saved portfolio.
+Scroll the list (sorted by percentage or alphabetical or stock price), click on one, opens a new window to the Bar chart with a lot of features (volume, scroll in and out, draw lines)

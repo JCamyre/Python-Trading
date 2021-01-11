@@ -35,10 +35,11 @@ def get_day_premarket_movers():
 	try:
 		print('Biggest winners from TheStockMarketWatch:')
 		marketwatch_list = [(ticker.get_text(), float(change.get_text()[:-1].replace(',',''))) for ticker, change in zip(table.find_all('td', {'class': 'tdSymbol'}), table.find_all('td', {'class': 'tdChangePct'}))]
-		for i, j in sorted(marketwatch_list, key=lambda x: x[1], reverse=True):
-			print(i, j)
+		for ticker, percentage in sorted(marketwatch_list, key=lambda x: x[1], reverse=True):
+			print(f'{ticker}: {percentage}%')
 	except:
 		print('Due to unseen errors, the stockmarketwatch list is unable to be reached.')
+	print()
 
 	url = 'https://www.benzinga.com/money/premarket-movers/'
 	page = get(url)
@@ -49,11 +50,9 @@ def get_day_premarket_movers():
 	try:
 		print('Biggest winners from Benzinga:')
 		for ticker, percentage in data:
-			print(ticker, percentage)
+			print(f'{ticker}: {percentage}%')
 	except:
 		print('Due to unseen errors, the Benzinga list is unable to be reached.')
-
-get_day_premarket_movers()
 
 def get_silver_stocks():
 	url = 'http://www.24hgold.com/english/listcompanies.aspx?fundamental=datas&data=company&commodity=ag&commodityname=SILVER&sort=resources&iordre=107'

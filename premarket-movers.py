@@ -1,3 +1,6 @@
 from pytrading.download_tickers import get_day_premarket_movers
+from datetime import datetime
 
-get_day_premarket_movers()
+if datetime.today().weekday() not in [5, 6]:
+	get_day_premarket_movers()
+
