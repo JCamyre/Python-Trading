@@ -2,11 +2,12 @@
 and trending stocks, to hopefully make money on a day trade.'''
 from datetime import date 
 from .base import Ticker
+import pandas as pd 
 
 class Portfolio:
 	# Maybe do a DataFrame? Easier to display, can sort. Columns for tickers, change_percentage, last_updated_price
 	# Pass in stocks with their target values, like this: (stock, target_prices)
-	def __init__(self, stocks, interval, period):
+	def __init__(self, stocks, interval='1m', period='1d'):
 		# if type(stocks) == tuple:
 		# 	self.stocks = stocks[0]
 
@@ -78,13 +79,17 @@ class Stock:
 		self.ticker = ticker
 		self.df = Ticker(ticker).get_data(interval, period)
 		self.prev_close = Ticker(ticker).get_data('1d', '2d').iloc[0]['Close']
-		print('prev_close', self.prev_close)
 		try:
 			self._last_updated_price = self.df.iloc[-1]['Close']
 		except:
 			pass
 		self.target_prices = target_prices
 		self.price_invested = price_invested
+
+	def get_month_data(self):
+		df = Ticker(self.ticker).get_data('1d', '1mo')
+		df.index = pd.to_datetime(df.index)
+		return df
 
 	def add_target_prices(self, new_target_prices):
 		self.target_prices = new_target_prices

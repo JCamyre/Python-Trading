@@ -67,6 +67,7 @@ class Ticker:
 		if interval == '1d':
 			df.index = list(map(lambda x: _datetime.datetime.fromtimestamp(x).date(), df.index))			
 		else:
+			print(_datetime.datetime)
 			df.index = list(map(lambda x: _datetime.datetime.fromtimestamp(x), df.index))
 		df = df[['close', 'high', 'low', 'open', 'volume']]
 		df.columns = list(map(lambda name: name.capitalize(), df.columns))
