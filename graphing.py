@@ -1,6 +1,8 @@
 import pytrading
 import mplfinance as mpf
-from pandas import read_excel
+import pandas as pd
+
+pd.set_option('display.max_columns', None)
 
 # Venv commands
 # Run .\pytradingenv\scripts\activate.bat to activate venv
@@ -24,6 +26,6 @@ def graph_stocks(stocks):
 		# ax.axis('equal')
 		# leg = ax.legend();
 
-graph_stocks(stocks)
+# graph_stocks(stocks)
 # Goal: read stocks from Excel spreadsheet.
-print(read_excel(r'C:\Users\JWcam\Desktop\STONKS.xlsx'))	
+print(pd.read_excel(r'C:\Users\JWcam\Desktop\STONKS.xlsx'))	
