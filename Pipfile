@@ -6,27 +6,8 @@ verify_ssl = true
 [dev-packages]
 
 [packages]
-pandas = "==1.1.0"
-beautifulsoup4 = "==4.9.1"
-bs4 = "==0.0.1"
-certifi = "==2020.6.20"
-chardet = "==3.0.4"
-idna = "==2.10"
-multitasking = "==0.0.9"
-numpy = "==1.19.1"
-pathlib = "==1.0.1"
-python-dateutil = "==2.8.1"
-pytz = "==2020.1"
-requests = "==2.24.0"
-six = "==1.15.0"
-soupsieve = "==2.0.1"
-urllib3 = "==1.25.10"
-yfinance = "==0.1.54"
-DateTime = "==4.3"
-"zope.interface" = "==5.1.0"
-matplotlib = "*"
-mpl-finance = "*"
 mplfinance = "*"
+requests = "*"
 
 [requires]
 python_version = "3.7"

@@ -86,8 +86,8 @@ class Stock:
 		self.target_prices = target_prices
 		self.price_invested = price_invested
 
-	def get_month_data(self):
-		df = Ticker(self.ticker).get_data('1d', '1mo')
+	def get_month_data(self, num=1):
+		df = Ticker(self.ticker).get_data('1d', f'{num}mo')
 		df.index = pd.to_datetime(df.index)
 		return df
 
