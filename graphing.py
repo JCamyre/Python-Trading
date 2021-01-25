@@ -11,21 +11,28 @@ pd.set_option('display.max_columns', None)
 # pip freeze
 
 # I will be rich with Spac + Ev + Biotech + Ziptrader + Data analysis companies + ML trading
-stocks = pytrading.Portfolio(['PLTR', 'CCIV', 'NPA'])
+stocks = pytrading.Portfolio(['NNDM', 'CCIV'])
 
 mc = mpf.make_marketcolors(up='g', down='r', inherit=True)
 s = mpf.make_mpf_style(base_mpf_style='nightclouds', marketcolors=mc)
 
-def graph_stocks(stocks):
-	for stock in stocks:
+def graph_stocks(stocks, lines=None): # lines: pass an array of lists with support line values
+	for i, stock in enumerate(stocks):
 		df = stock.get_month_data(num=2)
-		mpf.plot(df, style=s, title=f'${stock.ticker}', type='candle', mav=(2, 9), volume=True)
+		# I would like to add multiple support/resistance lines. 
+		df['support'] = lines[i][0]
+		apdict = mpf.make_addplot(df['support'])
+		mpf.plot(df, style=s, title=f'${stock.ticker}', type='candle', mav=(2, 9), volume=True, addplot=apdict)
 		# fig, ax = mpf.plot(df, style=s, title=f'${stock.ticker}', type='candle', mav=(2, 9), volume=True, returnfig=True)
 		# ax.plot(x, np.sin(x), '-b', label='Sine')
 		# ax.plot(x, np.cos(x), '--r', label='Cosine')
 		# ax.axis('equal')
 		# leg = ax.legend();
 
-# graph_stocks(stocks)
-# Goal: read stocks from Excel spreadsheet.
-print(pd.read_excel(r'C:\Users\JWcam\Desktop\STONKS.xlsx'))	
+graph_stocks(stocks, lines=[[20, 17.50], [15, 13, 11.5]])
+
+def read_stock_excel(file):
+	for index, row in pd.read_excel(file).iterrows():
+		print(f'${row["Ticker"]}, {row["Price Targets"]}, {row["Catalyst Dates"]}')
+
+# read_stock_excel(r'C:\Users\JWcam\Desktop\STONKS.xlsx')

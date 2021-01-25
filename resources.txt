@@ -1,7 +1,7 @@
 Ziptrader Quotes
 "Pre-anticipatory runs and post-reaction plays"
 "Don't hold through earnings"
-"As a rule folks, you should never be holding a crashing stock unless your goal on said stock is to hold out to a long term price target, and which case you must have the stomach to hold through down trends.
+"As a rule folks, you should never be holding a crashing stock unless your goal on said stock is to hold out to a long term price target, and which case you must have the stomach to hold through down trends. Have faith in the company, you know it is worth value (do research)."
 "The people who lose are those who hold through down trends, but don't have any intention of holding it until it goes back up, or has an exit strategy."
 "Make an exit plan: are you going to sell out at the first show of weakness, which means validation, or are you going to hold through storms to your target price?"
 "BTC receiving more mainstream acceptance, wall street, major institiutions investing, wow even Ark investment" 
@@ -11,3 +11,6 @@ Biopharma Catalyst Calendar - https://www.biopharmcatalyst.com/calendars/fda-cal
 Penny stock news - https://www.google.com/search?client=opera&q=penny+stocks+news&sourceid=opera&ie=UTF-8&oe=UTF-8
 NLP + Stock news headlines trading - https://towardsdatascience.com/using-nlp-and-deep-learning-to-predict-the-stock-market-64eb9229e102
 Earnings Calendar: https://markets.businessinsider.com/earnings-calendar#date=01/25/2021&name=&countries=&eventtypes=103,99&tab=ALL
+
+Indicators (Ziptrader approved):
+15-30 min interval for support/resistance lines
