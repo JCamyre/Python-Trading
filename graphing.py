@@ -1,16 +1,17 @@
 import pytrading
 import mplfinance as mpf
 import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
 
 pd.set_option('display.max_columns', None)
 
 # Venv commands
-# Run .\pytradingenv\scripts\activate.bat to activate venv
+# Run ".\pytradingenv\scripts\activate.bat" to activate venv
 # deactivate
 # pip install -r requirements.txt
 # pip freeze
 
-# I will be rich with Spac + Ev + Biotech + Ziptrader + Data analysis companies + ML trading
 stocks = pytrading.Portfolio(['NNDM', 'CCIV'])
 
 mc = mpf.make_marketcolors(up='g', down='r', inherit=True)
@@ -21,13 +22,17 @@ def graph_stocks(stocks, lines=None): # lines: pass an array of lists with suppo
 		df = stock.get_month_data(num=2)
 		# I would like to add multiple support/resistance lines. 
 		df['support'] = lines[i][0]
-		apdict = mpf.make_addplot(df['support'])
-		mpf.plot(df, style=s, title=f'${stock.ticker}', type='candle', mav=(2, 9), volume=True, addplot=apdict)
-		# fig, ax = mpf.plot(df, style=s, title=f'${stock.ticker}', type='candle', mav=(2, 9), volume=True, returnfig=True)
-		# ax.plot(x, np.sin(x), '-b', label='Sine')
-		# ax.plot(x, np.cos(x), '--r', label='Cosine')
+		# apdict = mpf.make_addplot(df['support'])
+		fig1, ax = plt.subplots()
+		ax.scatter(df.index, df['support'], Label='Support 1')
+		fig1.suptitle('yo1')
+		fig2, volume = plt.subplots()
+		volume.scatter(df.index, df['Volume'], Label='Volume')
+		fig2.suptitle('yo2')
+		print(df)
 		# ax.axis('equal')
 		# leg = ax.legend();
+		mpf.plot(df, style=s, title=f'${stock.ticker}', type='candle', mav=(2, 9), volume=volume, ax=ax)
 
 graph_stocks(stocks, lines=[[20, 17.50], [15, 13, 11.5]])
 

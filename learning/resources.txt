@@ -1,0 +1,74 @@
+Ziptrader Quotes
+"Pre-anticipatory runs and post-reaction plays"
+"Don't hold through earnings"
+"As a rule folks, you should never be holding a crashing stock unless your goal on said stock is to hold out to a long term price target, and which case you must have the stomach to hold through down trends. Have faith in the company, you know it is worth value (do research)."
+"The people who lose are those who hold through down trends, but don't have any intention of holding it until it goes back up, or has an exit strategy."
+"Make an exit plan: are you going to sell out at the first show of weakness, which means validation, or are you going to hold through storms to your target price?"
+"BTC receiving more mainstream acceptance, wall street, major institiutions investing, wow even Ark investment" 
+
+Links
+Biopharma Catalyst Calendar - https://www.biopharmcatalyst.com/calendars/fda-calendar
+Penny stock news - https://www.google.com/search?client=opera&q=penny+stocks+news&sourceid=opera&ie=UTF-8&oe=UTF-8
+NLP + Stock news headlines trading - https://towardsdatascience.com/using-nlp-and-deep-learning-to-predict-the-stock-market-64eb9229e102
+Earnings Calendar: https://markets.businessinsider.com/earnings-calendar#date=01/25/2021&name=&countries=&eventtypes=103,99&tab=ALL
+
+Indicators (Ziptrader approved):
+15-30 min interval for support/resistance lines
+Most important: 9 SMA line - Measure price strength, above line (positive price strength territory), below line (negative price strength territory). We can ride positive price strength (a confirmation of price strength) until we have negative price strength (sell off? depends on your faith). Concrete entry and exit points.
+Clean price strength, choppy price strength. 
+Elevating factors.
+Directional 180 SMA line - Gauge direction (uptrend or downtrend), if you are trading above it (upward direction), if you are trading below it (downward). If a stock trys turn an upward direction (above) into a downward (below), and is rejected, called "rejection of a downward direction"(elevating factor)
+Upward sentiment volume - High relative volume when stock is in upward trend (elevating factor)
+Downward sentiment volume - High relative volume when stock is in downward trend
+RSI - "more likely" to be a good/bad deal or overextended. Oversold is an elevating factor.
+
+All elevating factors:
+Above 9 SMA line + clean price strength (not shifting above and below 9 SMA)
+Above 180 SMA line directional line 
+If a stock trys to turn from upward to downwards direction, but is rejected, "rejection of a downward direction"
+Upward sentiment volume (high relative volume when stock upwards)
+RSI oversold/fair value
+Stock frequently is overbought
+
+All depreciating factors:
+Below 9 SMA line + shifting above and below line
+First touch of 9 SMA sell 
+Below 180 SMA line directional line 
+If a stock turns from upward to downwards direction (crosses below 180 SMA)
+If a stock turns from downwards to upwards direction "rejection of a downward direction"
+Upward sentiment volume (high relative volume when stock upwards)
+RSI overbought
+
+
+3 Bar rule:
+Whole point of 3 Bar rule is to use in place of regular elevating vs depreciating factors. 
+3 Bar rule best for 
+3 Bar rule not good for when there are multiple huge appreciating factors (such as passing the 9 SMA line)
+Wicks (high/low) do matter, don't judge just by open/close. 
+
+To find 3 bar plays:
+1. Identify stocks with potiental catalysts the night before (FDA approvals, earnings release, new guidance)
+2. Scan for stocks that are oversold & increasing (low RSI + reversal)
+3. Create a #losers watchlist, watch for any stock that is oversold
+4. Find previous history of 3 bar play (stocks that have already had 3 bar play, bull or bear)
+5. Best for 1/2/3/5 min 
+6. Scan for after hours/premarket runners. 
+
+Why cant I just selling off/oversold stocks and buy them?
+Do I try to sell the afterhours (basically buying stocks right at the end of the day that are trailing off near low of day, then sell after hours)? Still has decent support, 
+Do I just start buying WSB stocks? (aka low priced stocks with high short interest (35%+))
+
+What did I do wrong? Not even patient + FOMO? Spy was down almost 3% today, so unlucky there. 
+
+
+Stupid stuff to buy:
+Cruiselines
+Gyms
+Trivago
+Wait for selling off
+BB, NOK, AMC
+Stuff related to stimulus, vaccine, herd immunity, reopening, green energy, come up with ideas: 
+i.e: "Everyone needs loans right now, so buy Lending Tree"
+Starbucks? - Becky stock, Covid prep, in China (no luckyn coffee), Schultz in it with Xi Ji Ping
+VTNR - energy yolo
+Look at SPY before buy/sell
