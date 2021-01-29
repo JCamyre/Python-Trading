@@ -34,10 +34,17 @@ def graph_stocks(stocks, lines=None): # lines: pass an array of lists with suppo
 		# leg = ax.legend();
 		mpf.plot(df, style=s, title=f'${stock.ticker}', type='candle', mav=(2, 9), volume=volume, ax=ax)
 
-graph_stocks(stocks, lines=[[20, 17.50], [15, 13, 11.5]])
+# graph_stocks(stocks, lines=[[20, 17.50], [15, 13, 11.5]])
 
 def read_stock_excel(file):
 	for index, row in pd.read_excel(file).iterrows():
 		print(f'${row["Ticker"]}, {row["Price Targets"]}, {row["Catalyst Dates"]}')
 
 # read_stock_excel(r'C:\Users\JWcam\Desktop\STONKS.xlsx')
+
+def get_fda_calendar(textfile):
+	# Unfortunately can not scrape data from website, so I copied the plain text manually.
+	with open(textfile, 'r') as f:
+		print(f.read())
+
+get_fda_calendar('FDACalendar.txt')
