@@ -1,0 +1,15 @@
+Metadata-Version: 1.1
+Name: KivyCalendar
+Version: 0.1.3
+Summary: Calendar & Date picker widgets for Kivy
+Home-page: https://bitbucket.org/xxblx/kivycalendar
+Author: Oleg Kozlov (xxblx)
+Author-email: xxblx.oleg@yandex.com
+License: MIT License
+Description: UNKNOWN
+Keywords: kivy widgets calendar datepicker
+Platform: UNKNOWN
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python :: 2.7
+Classifier: Topic :: Software Development :: Libraries :: Python Modules

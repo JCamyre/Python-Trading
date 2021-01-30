@@ -4,6 +4,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import regex as re
+from datetime import datetime
 
 pd.set_option('display.max_columns', None)
 
@@ -58,7 +59,8 @@ def get_fda_calendar(textfile):
 		for line in lines:
 			yo = find_match(date, line)
 			if yo:
-				cur_date = yo.group(0)
+				cur_date = yo.group(0) + ', 2021'
+				cur_date = datetime.strptime(cur_date, '%A, %B %d, %Y')
 				testing[cur_date] = []
 			elif line != ' ':
 				testing[cur_date].append(line)
