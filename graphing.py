@@ -3,6 +3,7 @@ import mplfinance as mpf
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+import regex as re
 
 pd.set_option('display.max_columns', None)
 
@@ -42,9 +43,28 @@ def read_stock_excel(file):
 
 # read_stock_excel(r'C:\Users\JWcam\Desktop\STONKS.xlsx')
 
+def find_match(pattern, words):
+	match = pattern.search(words)
+	return match
+
 def get_fda_calendar(textfile):
 	# Unfortunately can not scrape data from website, so I copied the plain text manually.
+	# Logic: All companies after a date, and before a new one, belong to the aforementioned date.
+	date = re.compile(r'\w{3,6}day, \w{3,9}\s\d{1,2}') # Finds all dates in text using pattern
+	testing = dict()
 	with open(textfile, 'r') as f:
-		print(f.read())
+		lines = f.read().split('\n')
+		cur_date = lines[0]
+		for line in lines:
+			yo = find_match(date, line)
+			if yo:
+				cur_date = yo.group(0)
+				testing[cur_date] = []
+			elif line != ' ':
+				testing[cur_date].append(line)
+	return testing
 
-get_fda_calendar('FDACalendar.txt')
+dates = get_fda_calendar('FDACalendar.txt')
+for date, companies in dates.items():
+	print(date, companies)
+
