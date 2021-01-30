@@ -68,7 +68,10 @@ def get_fda_calendar(textfile):
 	return testing
 
 dates = get_fda_calendar('FDACalendar.txt')
-for date, companies in dates.items():
-	print(date, companies)
+# for date, companies in dates.items():
+# 	print(date, companies)
 for date, companies in dates.items():
 	today_date = datetime.datetime.today()
+	cur_week_num = datetime.date(today_date.year, today_date.month, today_date.day).isocalendar()[1]
+	if cur_week_num == datetime.date(date.year, date.month, date.day).isocalendar()[1]:
+		print(date, companies)
