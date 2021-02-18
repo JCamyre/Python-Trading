@@ -13,7 +13,14 @@ class Portfolio:
 		# 	while stocks[0] != str:
 		# 		stocks = stocks[0]
 		# 		print(stocks)
-		self.stocks = [Stock(stock, interval=interval, period=period) for stock in sorted(stocks)]
+		if type(stocks) == list:
+			self.stocks = {Stock(stock, interval=interval, period=period) for stock in sorted(stocks)}
+		else:
+			self.stocks = {Stock(stock, interval=interval, period=period) for stock in sorted(stocks.split())}	
+
+	def add_stocks(self, stocks):
+		for stock in stocks.split():
+			self.stocks.add(stock)
 
 	def clean_stocks(self):
 		for stock in self.stocks:
@@ -34,7 +41,7 @@ class Portfolio:
 		# return [stock.ticker for stock in self.stocks if stock.get_relative_volume() > 3.0]
 
 	def get_stocks(self):
-		return [stock.ticker for stock in self.stocks]
+		return sorted([(stock.ticker, stock.daily_stats(), stock.daily_change_percentage()) for stock in self.stocks], key=lambda x: x[0])
 
 	def get_stocks_daily(self):
 		return [stock.df_month for stock in self.stocks]
@@ -99,6 +106,8 @@ class Stock:
 		return ((self.df.iloc[-1]['High'] - self.df.iloc[-2]['Close'])/self.df.iloc[-2]['Close'])*100
 
 	def daily_stats(self):
+		df = Ticker(self.ticker).get_data('1d', '1d')
+		df.index = pd.to_datetime(df.index)		
 		return self.df.iloc[-1]['Close'], self.df.iloc[-1]['High'], self.df.iloc[-1]['Low']
 
 	def get_relative_volume(self):
