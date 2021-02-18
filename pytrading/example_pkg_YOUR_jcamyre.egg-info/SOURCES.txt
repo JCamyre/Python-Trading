@@ -1,6 +1,0 @@
-README.md
-setup.py
-example_pkg_YOUR_jcamyre.egg-info/PKG-INFO
-example_pkg_YOUR_jcamyre.egg-info/SOURCES.txt
-example_pkg_YOUR_jcamyre.egg-info/dependency_links.txt
-example_pkg_YOUR_jcamyre.egg-info/top_level.txt
