@@ -1,6 +1,0 @@
-README.md
-setup.py
-PyTrading.egg-info/PKG-INFO
-PyTrading.egg-info/SOURCES.txt
-PyTrading.egg-info/dependency_links.txt
-PyTrading.egg-info/top_level.txt
