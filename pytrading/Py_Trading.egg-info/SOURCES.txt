@@ -4,8 +4,8 @@ Py_Trading.egg-info/PKG-INFO
 Py_Trading.egg-info/SOURCES.txt
 Py_Trading.egg-info/dependency_links.txt
 Py_Trading.egg-info/top_level.txt
-pythontrading/__init__.py
-pythontrading/base.py
-pythontrading/download_tickers.py
-pythontrading/live_trading.py
-pythontrading/stock_info.py
+py_trading/__init__.py
+py_trading/base.py
+py_trading/download_tickers.py
+py_trading/live_trading.py
+py_trading/stock_info.py
