@@ -1,5 +1,3 @@
-'''This package contains modules with functions that assist day traders by aiding them in keeping track of their positions 
-and trending stocks, to hopefully make money on a day trade.'''
 from datetime import date 
 from .base import Ticker
 import pandas as pd 

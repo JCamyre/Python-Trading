@@ -11,7 +11,7 @@ setuptools.setup(
     description="A convenient Python module for stock information.",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/pypa/sampleproject",
+    url="https://github.com/JCamyre/Python-Trading",
     packages=setuptools.find_packages(),
     classifiers=[
         "Programming Language :: Python :: 3",
