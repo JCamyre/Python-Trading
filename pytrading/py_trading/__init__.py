@@ -1,6 +1,13 @@
-from datetime import date 
+from datetime import date, datetime
 from .base import Ticker
 import pandas as pd 
+from requests import get
+from bs4 import BeautifulSoup
+import re
+from GoogleNews import GoogleNews
+from dotenv import load_dotenv
+import os 
+import tweepy 
 
 class Portfolio:
 	# Maybe do a DataFrame? Easier to display, can sort. Columns for tickers, change_percentage, last_updated_price
@@ -43,7 +50,7 @@ class Portfolio:
 	def get_stocks(self):
 		return sorted([(stock.ticker, stock.daily_stats(), stock.daily_change_percentage()) for stock in self.stocks], key=lambda x: x[0])
 
-	def get_stocks_daily(self):
+	def get_stocks_daily(self): # Fix
 		return [stock.df_month for stock in self.stocks]
 
 	def get_stocks_intra(self):
@@ -123,6 +130,11 @@ class Stock:
 	def update_stock(self):
 		self.df = get_intra_day_data(self.ticker)
 		self.df_month = get_month_data(self.ticker)
+
+	def due_diligence(self):
+		pass
+
+
 
 	def __str__(self):
 		return self.ticker
