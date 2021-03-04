@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: Py-Trading
-Version: 0.0.4b1
+Version: 0.1.0
 Summary: A convenient Python module for stock information.
 Home-page: https://github.com/JCamyre/Python-Trading
 Author: Joseph Camyre
@@ -9,6 +9,19 @@ License: UNKNOWN
 Description: # Pytrading
         This package contains modules with functions that assist day and swing traders by aiding them in keeping track of their positions 
         and trending stocks.
+        
+        # Basic tutorial
+        import py_trading as pytrade
+        
+        my_portfolio = pytrade.Portfolio(['AAPL', 'TSLA', 'F', 'COKE'])
+        for stock in my_portfolio:
+        	stock.update_stock() 
+        	print(stock.get_month_data())
+        	print(stock.daily_change_percentage())
+        	print(stock.get_last_updated())
+        	print(stock.daily_high_change_percentage())
+        	print(stock.daily_stats())
+        
         
 Platform: UNKNOWN
 Classifier: Programming Language :: Python :: 3

@@ -7,6 +7,7 @@ import regex as re
 import datetime
 
 pd.set_option('display.max_columns', None)
+# Revamp the Flask site? Add this to functionality.
 
 # Venv commands
 # Run ".\pytradingenv\scripts\activate.bat" to activate venv
