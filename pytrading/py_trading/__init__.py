@@ -313,6 +313,9 @@ class Stock:
 			'Beta (5Y Monthly): ' + div.find('span', {'data-reactid': '61'}).get_text(), 'PE Ratio (TTM): ' + div.find('span', {'data-reactid': '66'}).get_text()
 
 		def _short_selling(self):
+			'''
+			Returns a stocks short_selling information
+			'''
 			BASE_URL = f'https://finviz.com/quote.ashx?t={self.ticker}'
 			soup = _get_soup(BASE_URL)
 
@@ -322,6 +325,9 @@ class Stock:
 
 
 		def _put_call_ratio(self): 
+			'''
+			Returns various information regarding the put call ratio of a stock.
+			'''
 			BASE_URL = f'https://www.alphaquery.com/stock/{self.ticker}/volatility-option-statistics/120-day/put-call-ratio-oi'
 			soup = _get_soup(BASE_URL)
 
@@ -464,6 +470,7 @@ class Stock:
 
 			return owners_df, mutual_funds_df, recent_purchases_df.tail()
 	
+		# Have not decided how I want to format returning all of this information
 		return _find_match(), _no_attributes(), _get_soup(), _get_summary(), _basic_stats(), _price_target(), _price_predictions(), 
 		_ta_indictators(), _news_sentiments(), _financials(), _short_selling(), _put_call_ratio(), _find_competition(), _etfs(), 
 		_insider_trading(), _social_media_sentiment(), _catalysts(), _big_money()
