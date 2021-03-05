@@ -156,13 +156,13 @@ class Stock:
 									"(KHTML, like Gecko) Chrome/29.0.1547.62 Safari/537.36'"}
 
 		# Make this all one big function
-		def _get_summary(self):
-			BASE_URL = f'https://www.marketwatch.com/investing/stock/{self.ticker}'
+		def _get_summary(ticker):
+			BASE_URL = f'https://www.marketwatch.com/investing/stock/{ticker}'
 			soup = _get_soup(BASE_URL)
 
 			summary = soup.find('p', {'class': 'description__text'})
 
-			BASE_URL = f'https://finance.yahoo.com/quote/{self.ticker}?p={self.ticker}'
+			BASE_URL = f'https://finance.yahoo.com/quote/{ticker}?p={ticker}'
 			soup = _get_soup(BASE_URL)
 			website = soup.find('a', {'title': 'Company Profile'})
 			if website:
@@ -173,9 +173,9 @@ class Stock:
 
 			# Find the website of the stock and go to its information page
 
-		def _basic_stats(self):
+		def _basic_stats(ticker):
 			# Market cap, avg volume, price, chart, 
-			BASE_URL = f'https://finance.yahoo.com/quote/{self.ticker}/key-statistics?p={self.ticker}'
+			BASE_URL = f'https://finance.yahoo.com/quote/{ticker}/key-statistics?p={ticker}'
 			soup = _get_soup(BASE_URL)
 
 			with open('output1.html', 'w', encoding='utf-8') as file:
@@ -190,14 +190,15 @@ class Stock:
 			print([(i.find('h3', {'class': 'Mt(20px)'}), i.find('tbody').find_all('tr')) for i in div.find_all('div', {'class': 'Pos(r) Mt(10px)'})])
 
 			# Income Statement
-			BASE_URL = f'https://finance.yahoo.com/quote/{self.ticker}/financials?p={self.ticker}'
+			BASE_URL = f'https://finance.yahoo.com/quote/{ticker}/financials?p={ticker}'
 			soup = _get_soup(BASE_URL)
 			# Balance Sheet
-			BASE_URL = f'https://finance.yahoo.com/quote/{self.ticker}/balance-sheet?p={self.ticker}'
+			BASE_URL = f'https://finance.yahoo.com/quote/{ticker}/balance-sheet?p={ticker}'
 			soup = _get_soup(BASE_URL)
 			pass
 
 		def _price_target(self, exchange='NASDAQ'): # Automatically find correct stock exchange
+			BASE_URL = ''
 			soup = _get_soup(BASE_URL)
 			table = soup.find('table', {'class': "scroll-table"})
 			# price_target = soup.find('table', {'class': 'scroll-table'})
@@ -206,7 +207,7 @@ class Stock:
 			_pattern = re.compile(r'\d{1,3}\.\d\d\% \w{6,8}')
 			percentage = _find_match(_pattern, table.get_text()).group(0)
 
-			BASE_URL = f'https://finviz.com/quote.ashx?t={self.ticker}'
+			BASE_URL = f'https://finviz.com/quote.ashx?t={ticker}'
 			response = get(BASE_URL, headers=HEADERS, timeout=20)
 			soup = BeautifulSoup(response.content, 'lxml')
 			table = soup.find('table', {'class': "fullview-ratings-outer"})
@@ -222,8 +223,8 @@ class Stock:
 			analyst_price_targets = analyst_price_targets.set_index('Date')
 			return price_target, percentage, analyst_price_targets
 
-		def _price_predictions(self):
-			BASE_URL = f'https://www.barchart.com/stocks/quotes/{self.ticker}/opinion'
+		def _price_predictions(ticker):
+			BASE_URL = f'https://www.barchart.com/stocks/quotes/{ticker}/opinion'
 			soup = _get_soup(BASE_URL)
 
 			table = soup.find('table', {'data-ng-class': "{'hide': currentView !== 'strengthDirection'}"})
@@ -242,7 +243,7 @@ class Stock:
 			print(df.head())
 
 		def _ta_indictators(self, exchange='NASDAQ'): # Loads wrong page. Beta, RSI history, above/below 9 SMA, above/below 180 SMA, volatility, rel volume
-			BASE_URL = f'https://www.tradingview.com/symbols/{exchange}-{self.ticker}/technicals/'
+			BASE_URL = f'https://www.tradingview.com/symbols/{exchange}-{ticker}/technicals/'
 			soup = _get_soup(BASE_URL)
 
 			# Buy or sell (Summary, Oscillators, Moving Averages)
@@ -255,8 +256,8 @@ class Stock:
 			# 	file.write(str(soup.prettify('utf-8')))
 
 
-		def _news_sentiments(self): # Returns news articles curated via Finviz, Yahoo, and Google News, GET UNUSUAL OPTION ACTIVITY
-			BASE_URL = f'https://finviz.com/quote.ashx?t={self.ticker}'
+		def _news_sentiments(ticker): # Returns news articles curated via Finviz, Yahoo, and Google News, GET UNUSUAL OPTION ACTIVITY
+			BASE_URL = f'https://finviz.com/quote.ashx?t={ticker}'
 			soup = _get_soup(BASE_URL)
 
 			table = soup.find('table', {'class': 'fullview-news-outer'})
@@ -275,13 +276,13 @@ class Stock:
 			# print([(i, j) for i, j in zip(googlenews.get_texts(), googlenews.get_links())])
 			# To get other pages, do googlenews.get_page(2), etc.
 
-			BASE_URL = f'https://finance.yahoo.com/quote/{self.ticker}/news?p={self.ticker}'
+			BASE_URL = f'https://finance.yahoo.com/quote/{ticker}/news?p={ticker}'
 			soup = _get_soup(BASE_URL)
 
 			links = soup.find_all('a', {'class': 'js-content-viewer wafer-caas Fw(b) Fz(18px) Lh(23px) LineClamp(2,46px) Fz(17px)--sm1024 Lh(19px)--sm1024 LineClamp(2,38px)--sm1024 mega-item-header-link Td(n) C(#0078ff):h C(#000) LineClamp(2,46px) LineClamp(2,38px)--sm1024 not-isInStreamVideoEnabled'})
 			print([(link.get_text(), str('yahoo.com' + link['href'])) for link in links])
 
-			BASE_URL = f'https://finance.yahoo.com/quote/{self.ticker}/press-releases?p={self.ticker}'
+			BASE_URL = f'https://finance.yahoo.com/quote/{ticker}/press-releases?p={ticker}'
 			soup = _get_soup(BASE_URL)
 
 			links = soup.find_all('a', {'class': 'js-content-viewer wafer-caas Fw(b) Fz(18px) Lh(23px) LineClamp(2,46px) Fz(17px)--sm1024 Lh(19px)--sm1024 LineClamp(2,38px)--sm1024 mega-item-header-link Td(n) C(#0078ff):h C(#000) LineClamp(2,46px) LineClamp(2,38px)--sm1024 not-isInStreamVideoEnabled'})
@@ -291,9 +292,9 @@ class Stock:
 
 			return df
 
-		def _financials(self): # OMEGALUL
+		def _financials(ticker): # OMEGALUL
 			# Displaying all information. Could leave this as a dictionary.
-			BASE_URL = f'https://finviz.com/quote.ashx?t={self.ticker}'
+			BASE_URL = f'https://finviz.com/quote.ashx?t={ticker}'
 			soup = _get_soup(BASE_URL)
 			table = soup.find('table', {'class': 'snapshot-table2'})
 			labels = table.find_all('td', {'class': 'snapshot-td2-cp'})
@@ -304,7 +305,7 @@ class Stock:
 			df = pd.DataFrame(info_dict.items(), columns={'Label', 'Value'})
 
 			# yo
-			BASE_URL = f'https://finance.yahoo.com/quote/{self.ticker}/key-statistics?p={self.ticker}'
+			BASE_URL = f'https://finance.yahoo.com/quote/{ticker}/key-statistics?p={ticker}'
 			soup = _get_soup(BASE_URL)
 
 			# PE/G, market cap, profit margin, idk what else is important
@@ -312,11 +313,11 @@ class Stock:
 			return df, 'Avg. Volume: ' + div.find('span', {'data-reactid': '48'}).get_text(), 'Market Cap: ' + div.find('span', {'data-reactid': '56'}).get_text(), 
 			'Beta (5Y Monthly): ' + div.find('span', {'data-reactid': '61'}).get_text(), 'PE Ratio (TTM): ' + div.find('span', {'data-reactid': '66'}).get_text()
 
-		def _short_selling(self):
+		def _short_selling(ticker):
 			'''
 			Returns a stocks short_selling information
 			'''
-			BASE_URL = f'https://finviz.com/quote.ashx?t={self.ticker}'
+			BASE_URL = f'https://finviz.com/quote.ashx?t={ticker}'
 			soup = _get_soup(BASE_URL)
 
 			labels = soup.find_all('td', {'class': 'snapshot-td2-cp'})
@@ -324,11 +325,11 @@ class Stock:
 			return labels[16].get_text(), values[16].get_text(), labels[22].get_text(), values[22].get_text()
 
 
-		def _put_call_ratio(self): 
+		def _put_call_ratio(ticker): 
 			'''
 			Returns various information regarding the put call ratio of a stock.
 			'''
-			BASE_URL = f'https://www.alphaquery.com/stock/{self.ticker}/volatility-option-statistics/120-day/put-call-ratio-oi'
+			BASE_URL = f'https://www.alphaquery.com/stock/{ticker}/volatility-option-statistics/120-day/put-call-ratio-oi'
 			soup = _get_soup(BASE_URL)
 
 			ratio_volume = soup.find('tr', {'id': 'indicator-put-call-ratio-volume'})
@@ -340,8 +341,8 @@ class Stock:
 
 			return ratio_volume, ratio_open_interest, forward_price, call_breakeven_price, put_breakeven_price, option_breakeven_price
 
-		def _find_competition(self):
-			BASE_URL = f'https://finviz.com/quote.ashx?t={self.ticker}'
+		def _find_competition(ticker):
+			BASE_URL = f'https://finviz.com/quote.ashx?t={ticker}'
 			soup = _get_soup(BASE_URL)
 
 			td = soup.find_all('td', {'class': 'fullview-links'})[1]
@@ -351,8 +352,8 @@ class Stock:
 				print(i)
 				print('')
 
-		def _etfs(self):
-			BASE_URL = f'https://etfdb.com/stock/{self.ticker}/'
+		def _etfs(ticker):
+			BASE_URL = f'https://etfdb.com/stock/{ticker}/'
 			soup = _get_soup(BASE_URL)
 			tbody = soup.find('tbody')
 			rows = tbody.find_all('tr')
@@ -360,8 +361,8 @@ class Stock:
 			train_df = pd.DataFrame(rows, columns={'Ticker', 'ETF', 'ETF Category', 'Expense Ratio', 'Weighting'})
 			return train_df
 
-		def _insider_trading(self):
-			BASE_URL = f'https://finviz.com/quote.ashx?t={self.ticker}'
+		def _insider_trading(ticker):
+			BASE_URL = f'https://finviz.com/quote.ashx?t={ticker}'
 			soup = _get_soup(BASE_URL)
 
 			tr = soup.find_all('tr', {'class': "insider-sale-row-2"})
@@ -375,13 +376,13 @@ class Stock:
 			auth = tweepy.AppAuthHandler(consumer_key, consumer_secret)
 			api = tweepy.API(auth, wait_on_rate_limit=True)
 			tweets = []
-			for i, tweet in enumerate(tweepy.Cursor(api.search, q=f'${self.ticker}', count=num_of_tweets).items(num_of_tweets)):
+			for i, tweet in enumerate(tweepy.Cursor(api.search, q=f'${ticker}', count=num_of_tweets).items(num_of_tweets)):
 				tweets.append(i, tweet.text, tweet.author.screen_name, tweet.retweet_count, tweet.favorite_count, tweet.created_at)
 			return tweets
 
-		def _catalysts(self): # Returns date of showcases, FDA approvals, earnings, etc
+		def _catalysts(ticker): # Returns date of showcases, FDA approvals, earnings, etc
 			# Earnings date: 
-			BASE_URL = f'https://finance.yahoo.com/quote/{self.ticker}?p={self.ticker}&.tsrc=fin-srch'
+			BASE_URL = f'https://finance.yahoo.com/quote/{ticker}?p={ticker}&.tsrc=fin-srch'
 			soup = _get_soup(BASE_URL)
 
 			earnings_date = soup.find('td', {'data-test': 'EARNINGS_DATE-value'})
@@ -421,8 +422,8 @@ class Stock:
 			# ?PageNum=4 to ?PageNum=1
 			return df
 
-		def _big_money(self): # Returns recent institutional investments in a stock, as well as the largest shareholders and mutual funds holding the stock
-			BASE_URL = f'https://money.cnn.com/quote/shareholders/shareholders.html?symb={self.ticker}&subView=institutional'
+		def _big_money(ticker): # Returns recent institutional investments in a stock, as well as the largest shareholders and mutual funds holding the stock
+			BASE_URL = f'https://money.cnn.com/quote/shareholders/shareholders.html?symb={ticker}&subView=institutional'
 			soup = _get_soup(BASE_URL)
 
 			# Latest institutional activity
@@ -454,7 +455,7 @@ class Stock:
 
 			mutual_funds_df = pd.DataFrame(df_data, columns=['Stockholder', 'Stake', 'Shares owned', 'Total value($)', 'Shares bought / sold', 'Total change'])
 
-			BASE_URL = f'https://fintel.io/so/us/{self.ticker}'
+			BASE_URL = f'https://fintel.io/so/us/{ticker}'
 			soup = _get_soup(BASE_URL)
 			table = soup.find('table', {'id': 'transactions'})
 
@@ -471,9 +472,10 @@ class Stock:
 			return owners_df, mutual_funds_df, recent_purchases_df.tail()
 	
 		# Have not decided how I want to format returning all of this information
-		return _find_match(), _no_attributes(), _get_soup(), _get_summary(), _basic_stats(), _price_target(), _price_predictions(), 
-		_ta_indictators(), _news_sentiments(), _financials(), _short_selling(), _put_call_ratio(), _find_competition(), _etfs(), 
-		_insider_trading(), _social_media_sentiment(), _catalysts(), _big_money()
+		return _get_summary(self.ticker), _basic_stats(self.ticker), _price_target(self.ticker), _price_predictions(self.ticker), 
+		_ta_indictators(self.ticker), _news_sentiments(self.ticker), _financials(self.ticker), _short_selling(self.ticker), 
+		_put_call_ratio(self.ticker), _find_competition(self.ticker), _etfs(self.ticker),_insider_trading(self.ticker), 
+		_social_media_sentiment(self.ticker), _catalysts(self.ticker), _big_money(self.ticker)
 
 	def __str__(self):
 		return self.ticker
