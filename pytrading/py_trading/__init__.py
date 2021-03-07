@@ -101,6 +101,14 @@ class Stock:
 	def get_month_data(self, num=1):
 		df = Ticker(self.ticker).get_data('1d', f'{num}mo')
 		df.index = pd.to_datetime(df.index)
+		for i in range(2, self.ticker.shape[0]):
+			self.ticker.loc[self.ticker.index[i], '2_sma'] = sum([float(i) for i in self.ticker.iloc[i-2:i]['Close']])/2
+		for i in range(9, self.ticker.shape[0]):
+			self.ticker.loc[self.ticker.index[i], '9_sma'] = sum([float(i) for i in self.ticker.iloc[i-9:i]['Close']])/9
+		try:
+			self.ticker = self.ticker[['Close', 'High', 'Low', '2_sma', '9_sma', 'Volume']]
+		except:
+			pass
 		return df
 
 	def add_target_prices(self, new_target_prices):
@@ -325,6 +333,7 @@ class Stock:
 
 			labels = soup.find_all('td', {'class': 'snapshot-td2-cp'})
 			values = soup.find_all('td', {'class': 'snapshot-td2'})
+
 			return labels[16].get_text(), values[16].get_text(), labels[22].get_text(), values[22].get_text()
 
 
@@ -396,18 +405,13 @@ class Stock:
 			BASE_URL = 'https://www.rttnews.com/corpinfo/fdacalendar.aspx'
 			soup = _get_soup(BASE_URL)
 
-			# company = soup.find_all('div', {'data-th': 'Company Name'})
-			# print(company[0].get_text())
+			company = soup.find_all('div', {'data-th': 'Company Name'})
 
-			# events = soup.find_all('div', {'data-th': 'Event'})
-			# print(events[0].get_text())
+			events = soup.find_all('div', {'data-th': 'Event'})
 
-			# outcome = soup.find_all('div', {'data-th': 'Outcome'})
-			# if outcome[0]:
-			# 	print(outcome[0].get_text())
+			outcome = soup.find_all('div', {'data-th': 'Outcome'})
 
-			# dates = soup.find_all('span', {'class': 'evntDate'})
-			# print([date.get_text() for date in dates])
+			dates = soup.find_all('span', {'class': 'evntDate'})
 
 			for i in range(len(company)):
 				if outcome[i]:
@@ -429,16 +433,7 @@ class Stock:
 			BASE_URL = f'https://money.cnn.com/quote/shareholders/shareholders.html?symb={ticker}&subView=institutional'
 			soup = _get_soup(BASE_URL)
 
-			# Latest institutional activity
-			# df_recent_activity = []
-			# table = soup.find('table', {'class', 'wsod_dataTable wsod_dataTableBig'})
-			# rows = table.find_all('tr')
-			# for row in rows:
-			# 	date = row.find('td', {'class': 'wsod_activityDate'})
-			# 	info = row.find('td', {'class': 'wsod_activityDetail'})
-			# 	df_recent_activity.append([date.get_text(), info.get_text()]) # Could make a data frame
-
-			# Top 10 Owners of self.{Ticker}
+			# Top 10 Owners
 			df_data = []
 			table = soup.find('table', {'class': 'wsod_dataTable wsod_dataTableBig wsod_institutionalTop10'})
 			rows = table.find_all('tr')[1:]
@@ -448,7 +443,7 @@ class Stock:
 
 			owners_df = pd.DataFrame(df_data, columns=['Stockholder', 'Stake', 'Shares owned', 'Total value($)', 'Shares bought / sold', 'Total change'])
 
-			# Top 10 Mutual Funds Holding self.{Ticker}
+			# Top 10 Mutual Funds Holding 
 			table = soup.find_all('table', {'class': 'wsod_dataTable wsod_dataTableBig wsod_institutionalTop10'})[1]
 			rows = table.find_all('tr')[1:]
 			df_data = []
@@ -458,21 +453,20 @@ class Stock:
 
 			mutual_funds_df = pd.DataFrame(df_data, columns=['Stockholder', 'Stake', 'Shares owned', 'Total value($)', 'Shares bought / sold', 'Total change'])
 
+			# Recent instutional investments, from a better source this time
 			BASE_URL = f'https://fintel.io/so/us/{ticker}'
 			soup = _get_soup(BASE_URL)
 			table = soup.find('table', {'id': 'transactions'})
-
 			rows = table.find_all('tr')
 			df_data = []
 			for row in rows[1:]:
 				date, form, investor, _, opt, avgshareprice, shares, shareschanged, value, valuechanged, _, _, _ = [i.get_text() for i in row.find_all('td')]
 				df_data.append([date, form, investor, opt, avgshareprice, shares, shareschanged, value, valuechanged])
-
 			recent_purchases_df = pd.DataFrame(df_data, columns=['Date', 'Form', 'Investor', 'Opt', 'Avg Share Price',
 				'Shares', 'Shares Changed (%)', 'Value ($1000)', 'Value Changed (%)'])
 			recent_purchases_df = recent_purchases_df.set_index('Date').sort_index(ascending=False)
 
-			return owners_df, mutual_funds_df, recent_purchases_df.tail()
+			return owners_df, mutual_funds_df, recent_purchases_df.tail(), 
 	
 		# Have not decided how I want to format returning all of this information
 		return _get_summary(self.ticker), _basic_stats(self.ticker), _price_target(self.ticker), _price_predictions(self.ticker), 
@@ -482,16 +476,6 @@ class Stock:
 
 	def __str__(self):
 		return self.ticker
-
-
-# 	for i in range(2, ticker.shape[0]):
-# 		ticker.loc[ticker.index[i], '2_sma'] = sum([float(i) for i in ticker.iloc[i-2:i]['Close']])/2
-# 	for i in range(9, ticker.shape[0]):
-# 		ticker.loc[ticker.index[i], '9_sma'] = sum([float(i) for i in ticker.iloc[i-9:i]['Close']])/9
-# 	try:
-# 		ticker = ticker[['Close', 'High', 'Low', '2_sma', '9_sma', 'Volume']]
-# 	except:
-# 		pass
 
 print('Welcome to PyTrading!')
 
