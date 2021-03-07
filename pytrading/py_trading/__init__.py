@@ -201,11 +201,11 @@ class Stock:
 			
 			return info
 
-		def _price_target(self, exchange='NASDAQ'): # Automatically find correct stock exchange
-			BASE_URL = ''
+		def _price_target(ticker, exchange='NASDAQ'): # Automatically find correct stock exchange
+			BASE_URL = f'https://www.marketbeat.com/stocks/{exchange}/{ticker}/price-target/'
 			soup = _get_soup(BASE_URL)
-			table = soup.find('table', {'class': "scroll-table"})
-			# price_target = soup.find('table', {'class': 'scroll-table'})
+			
+			price_target = soup.find('table', {'class': 'scroll-table'})
 			_pattern = re.compile(r'Price Target: \$\d{1,3}\.\d\d')
 			price_target = _find_match(_pattern, table.get_text()).group(0)
 			_pattern = re.compile(r'\d{1,3}\.\d\d\% \w{6,8}')
@@ -244,7 +244,7 @@ class Stock:
 				indictator = ' '.join(i.split()[:-3])
 				df_data.append((indictator, signal, strength, direction))
 			df = pd.DataFrame(df_data, columns=['Indictator', 'Signal', 'Strength', 'Direction'])
-			return df
+			return df, titles
 
 		def _ta_indictators(self, exchange='NASDAQ'): # Loads wrong page. Beta, RSI history, above/below 9 SMA, above/below 180 SMA, volatility, rel volume
 			BASE_URL = f'https://www.tradingview.com/symbols/{exchange}-{ticker}/technicals/'
@@ -253,7 +253,7 @@ class Stock:
 			# Buy or sell (Summary, Oscillators, Moving Averages)
 			s = soup.find_all('div', {'class': 'speedometerWrapper-1SNrYKXY'})
 			
-			# Oscillators
+			# Oscillators, this is bugged
 			oscillators = soup.find('div', {'class': 'container-2w8ThMcC tableWithAction-2OCRQQ8y'})
 			# with open('output1.html', 'w', encoding='utf-8') as file:
 			# 	file.write(str(soup.prettify('utf-8')))

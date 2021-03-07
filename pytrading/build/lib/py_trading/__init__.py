@@ -178,24 +178,28 @@ class Stock:
 			BASE_URL = f'https://finance.yahoo.com/quote/{ticker}/key-statistics?p={ticker}'
 			soup = _get_soup(BASE_URL)
 
+			info = []
+
 			with open('output1.html', 'w', encoding='utf-8') as file:
 				file.write(str(soup))
 
 			# Financial highlights
 			div = soup.find('div', {'class': 'Mb(10px) Pend(20px) smartphone_Pend(0px)'})
-			print([(i.find('h3', {'class': 'Mt(20px)'}), i.find('tbody').find_all('tr')) for i in div.find_all('div', {'class': 'Pos(r) Mt(10px)'})])
+			info.append([(i.find('h3', {'class': 'Mt(20px)'}), i.find('tbody').find_all('tr')) for i in div.find_all('div', {'class': 'Pos(r) Mt(10px)'})])
 
 			# Trading Information
 			div = soup.find('div', {'class': 'Pstart(20px) smartphone_Pstart(0px)'})
-			print([(i.find('h3', {'class': 'Mt(20px)'}), i.find('tbody').find_all('tr')) for i in div.find_all('div', {'class': 'Pos(r) Mt(10px)'})])
+			info.append([(i.find('h3', {'class': 'Mt(20px)'}), i.find('tbody').find_all('tr')) for i in div.find_all('div', {'class': 'Pos(r) Mt(10px)'})])
 
 			# Income Statement
 			BASE_URL = f'https://finance.yahoo.com/quote/{ticker}/financials?p={ticker}'
 			soup = _get_soup(BASE_URL)
+
 			# Balance Sheet
-			BASE_URL = f'https://finance.yahoo.com/quote/{ticker}/balance-sheet?p={ticker}'
-			soup = _get_soup(BASE_URL)
-			pass
+			# BASE_URL = f'https://finance.yahoo.com/quote/{ticker}/balance-sheet?p={ticker}'
+			# soup = _get_soup(BASE_URL)
+			
+			return info
 
 		def _price_target(self, exchange='NASDAQ'): # Automatically find correct stock exchange
 			BASE_URL = ''
@@ -240,7 +244,7 @@ class Stock:
 				indictator = ' '.join(i.split()[:-3])
 				df_data.append((indictator, signal, strength, direction))
 			df = pd.DataFrame(df_data, columns=['Indictator', 'Signal', 'Strength', 'Direction'])
-			print(df.head())
+			return df
 
 		def _ta_indictators(self, exchange='NASDAQ'): # Loads wrong page. Beta, RSI history, above/below 9 SMA, above/below 180 SMA, volatility, rel volume
 			BASE_URL = f'https://www.tradingview.com/symbols/{exchange}-{ticker}/technicals/'
@@ -248,8 +252,7 @@ class Stock:
 
 			# Buy or sell (Summary, Oscillators, Moving Averages)
 			s = soup.find_all('div', {'class': 'speedometerWrapper-1SNrYKXY'})
-			print(s)
-
+			
 			# Oscillators
 			oscillators = soup.find('div', {'class': 'container-2w8ThMcC tableWithAction-2OCRQQ8y'})
 			# with open('output1.html', 'w', encoding='utf-8') as file:
@@ -280,17 +283,17 @@ class Stock:
 			soup = _get_soup(BASE_URL)
 
 			links = soup.find_all('a', {'class': 'js-content-viewer wafer-caas Fw(b) Fz(18px) Lh(23px) LineClamp(2,46px) Fz(17px)--sm1024 Lh(19px)--sm1024 LineClamp(2,38px)--sm1024 mega-item-header-link Td(n) C(#0078ff):h C(#000) LineClamp(2,46px) LineClamp(2,38px)--sm1024 not-isInStreamVideoEnabled'})
-			print([(link.get_text(), str('yahoo.com' + link['href'])) for link in links])
+			news = [(link.get_text(), str('yahoo.com' + link['href'])) for link in links]
 
 			BASE_URL = f'https://finance.yahoo.com/quote/{ticker}/press-releases?p={ticker}'
 			soup = _get_soup(BASE_URL)
 
 			links = soup.find_all('a', {'class': 'js-content-viewer wafer-caas Fw(b) Fz(18px) Lh(23px) LineClamp(2,46px) Fz(17px)--sm1024 Lh(19px)--sm1024 LineClamp(2,38px)--sm1024 mega-item-header-link Td(n) C(#0078ff):h C(#000) LineClamp(2,46px) LineClamp(2,38px)--sm1024 not-isInStreamVideoEnabled'})
-			print([(link.get_text(), str('yahoo.com' + link['href'])) for link in links])
+			press_releases = [(link.get_text(), str('yahoo.com' + link['href'])) for link in links]
 			# Look for keywords in the news? Any showcases, Investor/analyst days, Analyst revisions, Management transitions
 			# Product launches, Significant stock buyback changes
 
-			return df
+			return df, news, press_releases
 
 		def _financials(ticker): # OMEGALUL
 			# Displaying all information. Could leave this as a dictionary.
@@ -349,8 +352,7 @@ class Stock:
 			sectors = td.find_all('a', {'class': 'tab-link'})
 			sector_urls = ([str('https://finviz.com/' + i['href']) for i in sectors])
 			for i in sector_urls: # Find stocks with similar P/E ratios and market cap, then track difference in performance
-				print(i)
-				print('')
+				pass
 
 		def _etfs(ticker):
 			BASE_URL = f'https://etfdb.com/stock/{ticker}/'
@@ -381,30 +383,31 @@ class Stock:
 			return tweets
 
 		def _catalysts(ticker): # Returns date of showcases, FDA approvals, earnings, etc
+			df_data = []
 			# Earnings date: 
 			BASE_URL = f'https://finance.yahoo.com/quote/{ticker}?p={ticker}&.tsrc=fin-srch'
 			soup = _get_soup(BASE_URL)
-
+			
+			# Convert to datetime
 			earnings_date = soup.find('td', {'data-test': 'EARNINGS_DATE-value'})
-			print(f'Next earnings date: {earnings_date.get_text()}')
+			earnings_date = f'Next earnings date: {earnings_date.get_text()}'
 
 			# FDA approvals
 			BASE_URL = 'https://www.rttnews.com/corpinfo/fdacalendar.aspx'
 			soup = _get_soup(BASE_URL)
 
-			df_data = []
-			company = soup.find_all('div', {'data-th': 'Company Name'})
-			print(company[0].get_text())
+			# company = soup.find_all('div', {'data-th': 'Company Name'})
+			# print(company[0].get_text())
 
-			events = soup.find_all('div', {'data-th': 'Event'})
-			print(events[0].get_text())
+			# events = soup.find_all('div', {'data-th': 'Event'})
+			# print(events[0].get_text())
 
-			outcome = soup.find_all('div', {'data-th': 'Outcome'})
-			if outcome[0]:
-				print(outcome[0].get_text())
+			# outcome = soup.find_all('div', {'data-th': 'Outcome'})
+			# if outcome[0]:
+			# 	print(outcome[0].get_text())
 
-			dates = soup.find_all('span', {'class': 'evntDate'})
-			print([date.get_text() for date in dates])
+			# dates = soup.find_all('span', {'class': 'evntDate'})
+			# print([date.get_text() for date in dates])
 
 			for i in range(len(company)):
 				if outcome[i]:
@@ -427,18 +430,18 @@ class Stock:
 			soup = _get_soup(BASE_URL)
 
 			# Latest institutional activity
-			table = soup.find('table', {'class', 'wsod_dataTable wsod_dataTableBig'})
-			rows = table.find_all('tr')
-			print('Recent large purchases:')
-			for row in rows:
-				date = row.find('td', {'class': 'wsod_activityDate'})
-				info = row.find('td', {'class': 'wsod_activityDetail'})
-				print(date.get_text(), info.get_text()) # Could make a data frame
+			# df_recent_activity = []
+			# table = soup.find('table', {'class', 'wsod_dataTable wsod_dataTableBig'})
+			# rows = table.find_all('tr')
+			# for row in rows:
+			# 	date = row.find('td', {'class': 'wsod_activityDate'})
+			# 	info = row.find('td', {'class': 'wsod_activityDetail'})
+			# 	df_recent_activity.append([date.get_text(), info.get_text()]) # Could make a data frame
 
 			# Top 10 Owners of self.{Ticker}
+			df_data = []
 			table = soup.find('table', {'class': 'wsod_dataTable wsod_dataTableBig wsod_institutionalTop10'})
 			rows = table.find_all('tr')[1:]
-			df_data = []
 			for row in rows:
 				data = row.find_all('td')
 				df_data.append([i.get_text() for i in data])
