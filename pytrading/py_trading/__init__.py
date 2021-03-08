@@ -101,12 +101,12 @@ class Stock:
 	def get_month_data(self, num=1):
 		df = Ticker(self.ticker).get_data('1d', f'{num}mo')
 		df.index = pd.to_datetime(df.index)
-		for i in range(2, self.ticker.shape[0]):
-			self.ticker.loc[self.ticker.index[i], '2_sma'] = sum([float(i) for i in self.ticker.iloc[i-2:i]['Close']])/2
-		for i in range(9, self.ticker.shape[0]):
-			self.ticker.loc[self.ticker.index[i], '9_sma'] = sum([float(i) for i in self.ticker.iloc[i-9:i]['Close']])/9
+		for i in range(2, df.shape[0]):
+			df.loc[df.index[i], '2_sma'] = sum([float(i) for i in df.iloc[i-2:i]['Close']])/2
+		for i in range(9, df.shape[0]):
+			df.loc[df.index[i], '9_sma'] = sum([float(i) for i in df.iloc[i-9:i]['Close']])/9
 		try:
-			self.ticker = self.ticker[['Close', 'High', 'Low', '2_sma', '9_sma', 'Volume']]
+			df = df[['Close', 'Open', 'High', 'Low', '2_sma', '9_sma', 'Volume']]
 		except:
 			pass
 		return df
