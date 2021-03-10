@@ -188,9 +188,6 @@ class Stock:
 
 			info = []
 
-			with open('output1.html', 'w', encoding='utf-8') as file:
-				file.write(str(soup))
-
 			# Financial highlights
 			div = soup.find('div', {'class': 'Mb(10px) Pend(20px) smartphone_Pend(0px)'})
 			info.append([(i.find('h3', {'class': 'Mt(20px)'}), i.find('tbody').find_all('tr')) for i in div.find_all('div', {'class': 'Pos(r) Mt(10px)'})])
@@ -199,15 +196,31 @@ class Stock:
 			div = soup.find('div', {'class': 'Pstart(20px) smartphone_Pstart(0px)'})
 			info.append([(i.find('h3', {'class': 'Mt(20px)'}), i.find('tbody').find_all('tr')) for i in div.find_all('div', {'class': 'Pos(r) Mt(10px)'})])
 
+			info_df = pd.DataFrame(info, columns={'Label', 'Value'})
+
 			# Income Statement
+			nerd_info = []
 			BASE_URL = f'https://finance.yahoo.com/quote/{ticker}/financials?p={ticker}'
 			soup = _get_soup(BASE_URL)
+			rows = soup.find_all('div', {'data-test': 'fin-row'})
+			for row in rows:
+				title = row.find('div', {'class': 'D(tbc) Ta(start) Pend(15px)--mv2 Pend(10px) Bxz(bb) Py(8px) Bdends(s) Bdbs(s) Bdstarts(s) Bdstartw(1px) Bdbw(1px) Bdendw(1px) Bdc($seperatorColor) Pos(st) Start(0) Bgc($lv2BgColor) fi-row:h_Bgc($hoverBgColor) Pstart(15px)--mv2 Pstart(10px)'})
+				data = row.find('div', {'data-test': 'fin-col'})
+				nerd_info.append([title.get_text(), data.get_text()])
+			
 
 			# Balance Sheet
 			BASE_URL = f'https://finance.yahoo.com/quote/{ticker}/balance-sheet?p={ticker}'
 			soup = _get_soup(BASE_URL)
+			rows = soup.find_all('div', {'data-test': 'fin-row'})
+			for row in rows:
+				title = row.find('D(ib) Fw(b) Ta(start) Px(15px)--mv2 Px(10px) W(247px)--mv2 W(222px) Bxz(bb) Bdendw(1px) Bdstartw(1px) Bdbw(1px) Bdends(s) Bdstarts(s) Bdbs(s) Bdc($seperatorColor) Py(6px) Pos(st) Start(0) Bgc($lv2BgColor)')
+				data = row.find('div', {'data-test': 'fin-col'})
+				nerd_info.append([title.get_text(), data.get_text()])
+
+			nerd_df = pd.DataFrame(nerd_info, columns={'Label', 'Value'})
 			
-			return info
+			return info_df, nerd_df
 
 		def _price_target(ticker, exchange='NASDAQ'): # Automatically find correct stock exchange
 			BASE_URL = f'https://www.marketbeat.com/stocks/{exchange}/{ticker}/price-target/'
