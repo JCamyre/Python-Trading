@@ -182,7 +182,7 @@ class Stock:
 			# Find the website of the stock and go to its information page
 
 		def _basic_stats(ticker):
-			# Market cap, avg volume, price, chart, 
+			# Market cap, avg volume, financial information
 			BASE_URL = f'https://finance.yahoo.com/quote/{ticker}/key-statistics?p={ticker}'
 			soup = _get_soup(BASE_URL)
 
@@ -208,7 +208,6 @@ class Stock:
 				data = row.find('div', {'data-test': 'fin-col'})
 				nerd_info.append([title.get_text(), data.get_text()])
 			
-
 			# Balance Sheet
 			BASE_URL = f'https://finance.yahoo.com/quote/{ticker}/balance-sheet?p={ticker}'
 			soup = _get_soup(BASE_URL)
@@ -267,9 +266,12 @@ class Stock:
 			df = pd.DataFrame(df_data, columns=['Indictator', 'Signal', 'Strength', 'Direction'])
 			return df, titles
 
-		def _ta_indictators(self, exchange='NASDAQ'): # Loads wrong page. Beta, RSI history, above/below 9 SMA, above/below 180 SMA, volatility, rel volume
-			BASE_URL = f'https://www.tradingview.com/symbols/{exchange}-{ticker}/technicals/'
+		def _ta_indictators(self): # Loads wrong page. Beta, RSI history, above/below 9 SMA, above/below 180 SMA, volatility, rel volume
+			BASE_URL = f'https://www.tradingview.com/symbols/{ticker}/technicals/'
 			soup = _get_soup(BASE_URL)
+
+			with open('output1.html', 'w', encoding='utf-8') as file:
+				file.write(str(soup))
 
 			# Buy or sell (Summary, Oscillators, Moving Averages)
 			s = soup.find_all('div', {'class': 'speedometerWrapper-1SNrYKXY'})
