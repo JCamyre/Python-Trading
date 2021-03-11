@@ -3,6 +3,17 @@ from bs4 import BeautifulSoup
 from datetime import datetime
 import pickle
 from pathlib import Path
+import pandas as pd
+
+def get_sp500():
+	request = get('https://en.wikipedia.org/wiki/List_of_S%26P_500_companies')
+	soup = BeautifulSoup(request.text, 'lxml')
+	table = soup.find('table')
+	df = pd.read_html(str(table))
+	print(df)
+	
+get_sp500()
+
 
 # def get_biggest_movers():
 # 	tickers = []
