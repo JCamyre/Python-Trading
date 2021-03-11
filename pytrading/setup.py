@@ -30,6 +30,7 @@ setuptools.setup(
 	'et-xmlfile==1.0.1',
 	'Flask==1.1.2',
 	'GoogleNews==1.5.5',
+	'html5lib==1.15.0',
 	'idna==2.10',
 	'itsdangerous==1.1.0',
 	'jdcal==1.4.1',
