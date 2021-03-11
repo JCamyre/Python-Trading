@@ -11,9 +11,17 @@ def get_sp500():
 	table = soup.find('table')
 	df = pd.read_html(str(table))
 	print(df)
-	
+
 get_sp500()
 
+def get_nasdaq():
+	request = get('https://en.wikipedia.org/wiki/Nasdaq-100')
+	soup = BeautifulSoup(request.text, 'lxml')
+	table = soup.find('table', {'id': 'constituents'})
+	df = pd.read_html(str(table))
+	print(df)
+
+get_nasdaq()
 
 # def get_biggest_movers():
 # 	tickers = []
