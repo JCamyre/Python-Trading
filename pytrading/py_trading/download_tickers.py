@@ -10,7 +10,7 @@ def get_sp500():
 	soup = BeautifulSoup(request.text, 'lxml')
 	table = soup.find('table')
 	df = pd.read_html(str(table))
-	print(df)
+	return df[0]
 
 get_sp500()
 
@@ -19,9 +19,21 @@ def get_nasdaq():
 	soup = BeautifulSoup(request.text, 'lxml')
 	table = soup.find('table', {'id': 'constituents'})
 	df = pd.read_html(str(table))
-	print(df)
+	return df[0]
 
 get_nasdaq()
+
+def get_nyse():
+	dfs = []
+	for letter in 'abcdefghijklmnopqrstuvwxyz':
+		request = get(f'https://eoddata.com/stocklist/NYSE/{letter}.htm')
+		soup = BeautifulSoup(request.text, 'lxml')
+		table = soup.find('table', {'class': 'quotes'})
+		df = pd.read_html(str(table))
+		dfs.append(df[0])
+	return pd.concat(dfs)
+
+get_nyse()
 
 # def get_biggest_movers():
 # 	tickers = []
