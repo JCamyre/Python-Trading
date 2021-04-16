@@ -290,7 +290,7 @@ class Stock:
 
 		# Getting news from google news search
 		googlenews = GoogleNews(lang='en', period='14d') # Specify period for news
-		googlenews.self.search(self.ticker) 
+		googlenews.search(self.ticker) 
 		# print([(i, j) for i, j in zip(googlenews.get_texts(), googlenews.get_links())])
 		# To get other pages, do googlenews.get_page(2), etc.
 

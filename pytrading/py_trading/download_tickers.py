@@ -33,7 +33,7 @@ def get_nasdaq(as_list=True): # Nasdaq + NYSE + AMEX
         return sorted(df.tolist())
     return df.sort_values(ascending=True)
 
-def get_nyse(): # Test to see if duplicate tickers on backend or Django webapp
+def get_nyse(as_list=True): # Test to see if duplicate tickers on backend or Django webapp
     dfs = []
     for letter in 'abcdefghijklmnopqrstuvwxyz':
         request = get(f'https://www.advfn.com/nyse/newyorkstockexchange.asp?companies={letter.upper()}')

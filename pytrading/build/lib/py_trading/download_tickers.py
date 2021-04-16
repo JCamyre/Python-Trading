@@ -30,18 +30,29 @@ def get_nasdaq(as_list=True): # Nasdaq + NYSE + AMEX
     df = df.reset_index()
     df = df['Symbol']
     if as_list:
-        return df.tolist()
-    return df
+        return sorted(df.tolist())
+    return df.sort_values(ascending=True)
 
-def get_nyse(): # Test to see if duplicate tickers on backend or Django webapp
-	dfs = []
-	for letter in 'abcdefghijklmnopqrstuvwxyz':
-		request = get(f'https://eoddata.com/stocklist/NYSE/{letter}.htm')
-		soup = BeautifulSoup(request.text, 'lxml')
-		table = soup.find('table', {'class': 'quotes'})
-		df = pd.read_html(str(table))
-		dfs.append(df[0])
-	return pd.concat(dfs)
+def get_nyse(as_list=True): # Test to see if duplicate tickers on backend or Django webapp
+    dfs = []
+    for letter in 'abcdefghijklmnopqrstuvwxyz':
+        request = get(f'https://www.advfn.com/nyse/newyorkstockexchange.asp?companies={letter.upper()}')
+        soup = BeautifulSoup(request.text, 'lxml')
+        table = soup.find('table', {'class': 'market tab1'})
+        df = pd.read_html(str(table))[0]
+        df.columns = df.iloc[1].tolist()
+        df = df.iloc[2:]
+        df = df.reset_index()
+        df = df['Symbol']
+        dfs.append(df)
+  
+	# Will this work since they are series?
+    df = pd.concat(dfs)
+    df = df.reset_index()
+    df = df['Symbol']
+    if as_list:
+        return sorted(df.tolist())
+    return df.sort_values(ascending=True)
 
 
 
