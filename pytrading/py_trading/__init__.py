@@ -474,6 +474,13 @@ class Stock:
 		recent_purchases_df = recent_purchases_df.set_index('Date').sort_index(ascending=False)
 
 		return owners_df, mutual_funds_df, recent_purchases_df.tail()
+
+	def r&d(self):
+		BASE_URL = f'https://ycharts.com/companies/{self.ticker}/r_and_d_expense'
+		soup = self._get_soup(BASE_URL)
+  
+  
+	
 	
 	def __str__(self):
 		return self.ticker
