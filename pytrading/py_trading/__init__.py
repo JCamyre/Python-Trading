@@ -475,11 +475,19 @@ class Stock:
 
 		return owners_df, mutual_funds_df, recent_purchases_df.tail()
 
-	def r&d(self):
+
+	def r_and_d(self):
 		BASE_URL = f'https://ycharts.com/companies/{self.ticker}/r_and_d_expense'
 		soup = self._get_soup(BASE_URL)
-  
-  
+		tables = soup.find_all('table', {'class': 'histDataTable'})
+		_pattern = re.compile(r'\d{1,3}\.\d{2}M')
+		all_dicts = []
+		for table in tables:
+			keys = [key.get_text() for key in table.find_all('td', {'class': 'col1'})]
+			vals = [_find_match(_pattern, val.get_text()).group() for val in table.find_all('td', {'class': 'col2'})]
+			data_dict = {key : val for key, val in zip(keys, vals)}
+			all_dicts.append(data_dict)
+		return all_dicts
 	
 	
 	def __str__(self):
