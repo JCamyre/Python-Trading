@@ -24,14 +24,21 @@ def get_nasdaq(as_list=True): # Nasdaq + NYSE + AMEX
         df = df.reset_index()
         df = df['Symbol']
         dfs.append(df)
+        
+    for letter in 'abcdefghijklmnopqrstuvwxyz':           
+        request = get(f'http://eoddata.com/stocklist/NASDAQ/{letter}.htm')
+        soup = BeautifulSoup(request.text, 'lxml')
+        table = soup.find('table', {'class': 'quotes'})
+        df = pd.read_html(str(table))[0]
+        df = df['Code']
+        dfs.append(df)
   
-	# Will this work since they are series?
     df = pd.concat(dfs)
     df = df.reset_index()
-    df = df['Symbol']
+    df = df[0]
     if as_list:
-        return sorted(df.tolist())
-    return df.sort_values(ascending=True)
+        return df.tolist()
+    return df
 
 def get_nyse(as_list=True): # Test to see if duplicate tickers on backend or Django webapp
     dfs = []
