@@ -367,8 +367,8 @@ class Stock:
 		td = soup.find_all('td', {'class': 'fullview-links'})[1]
 		sectors = td.find_all('a', {'class': 'tab-link'})
 		sector_urls = ([str('https://finviz.com/' + i['href']) for i in sectors])
-		for i in sector_urls: # Find stocks with similar P/E ratios and market cap, then track difference in performance
-			pass
+		for url in sector_urls: # Find stocks with similar P/E ratios and market cap, then track difference in performance
+			print(url)
 
 	def etfs(self):
 		BASE_URL = f'https://etfdb.com/stock/{self.ticker}/'
@@ -461,6 +461,7 @@ class Stock:
 		mutual_funds_df = pd.DataFrame(df_data, columns=['Stockholder', 'Stake', 'Shares owned', 'Total value($)', 'Shares bought / sold', 'Total change'])
 
 		# Recent instutional investments, from a better source this time
+		# Make sure sorted by most recent.
 		BASE_URL = f'https://fintel.io/so/us/{self.ticker}'
 		soup = self._get_soup(BASE_URL)
 		table = soup.find('table', {'id': 'transactions'})
