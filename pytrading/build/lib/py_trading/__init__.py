@@ -88,15 +88,19 @@ class Portfolio:
 class Stock:
 
 	def __init__(self, ticker, interval='1m', period='1d', target_prices=None, price_invested=None):
-		self.ticker = ticker
-		self.df = Ticker(ticker).get_data(interval, period)
-		self.prev_close = Ticker(ticker).get_data('1d', '2d').iloc[0]['Close']
 		try:
-			self._last_updated_price = self.df.iloc[-1]['Close']
+			self.ticker = ticker
+			self.df = Ticker(ticker).get_data(interval, period)
+			self.prev_close = Ticker(ticker).get_data('1d', '2d').iloc[0]['Close']
+			try:
+				self._last_updated_price = self.df.iloc[-1]['Close']
+			except:
+				pass
+			self.target_prices = target_prices
+			self.price_invested = price_invested
 		except:
-			pass
-		self.target_prices = target_prices
-		self.price_invested = price_invested
+			raise Exception('Sorry, we could not find this stock!')
+			
 
 	def get_month_data(self, num=1):
 		df = Ticker(self.ticker).get_data('1d', f'{num}mo')
