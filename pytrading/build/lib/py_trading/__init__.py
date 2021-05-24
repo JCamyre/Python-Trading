@@ -326,14 +326,7 @@ class Stock:
 			info_dict[str(label.get_text())] = str(val.get_text()) 
 		df = pd.DataFrame(info_dict.items(), columns={'Label', 'Value'})
 
-		# yo
-		BASE_URL = f'https://finance.yahoo.com/quote/{self.ticker}/key-statistics?p={self.ticker}'
-		soup = self._get_soup(BASE_URL)
-
-		# PE/G, market cap, profit margin, idk what else is important
-		div = soup.find('div', {'id': 'quote-summary'})
-		return df, 'Avg. Volume: ' + div.find('span', {'data-reactid': '48'}).get_text(), 'Market Cap: ' + div.find('span', {'data-reactid': '56'}).get_text(), 
-		'Beta (5Y Monthly): ' + div.find('span', {'data-reactid': '61'}).get_text(), 'PE Ratio (TTM): ' + div.find('span', {'data-reactid': '66'}).get_text()
+		return df
 
 	def short_selling(self):
 		'''

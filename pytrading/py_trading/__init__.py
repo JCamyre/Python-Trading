@@ -102,8 +102,8 @@ class Stock:
 			raise Exception('Sorry, we could not find this stock!')
 			
 
-	def get_month_data(self, num=1):
-		df = Ticker(self.ticker).get_data('1d', f'{num}mo')
+	def get_month_data(self, n=1):
+		df = Ticker(self.ticker).get_data('1d', f'{n}mo')
 		df.index = pd.to_datetime(df.index)
 		for i in range(2, df.shape[0]):
 			df.loc[df.index[i], '2_sma'] = sum([float(i) for i in df.iloc[i-2:i]['Close']])/2
@@ -324,6 +324,8 @@ class Stock:
 		info_dict = {}
 		for label, val in zip(labels, values):
 			info_dict[str(label.get_text())] = str(val.get_text()) 
+   
+		info_dict['company_name'] = soup.find_all('b')[5].get_text()
 		df = pd.DataFrame(info_dict.items(), columns={'Label', 'Value'})
 
 		return df
