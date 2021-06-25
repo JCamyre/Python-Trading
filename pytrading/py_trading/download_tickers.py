@@ -5,6 +5,16 @@ import pickle
 from pathlib import Path
 import pandas as pd
 
+# IMPLEMENT THREADING
+# results = [executor.submit(test_stocks, i, n_threads) for i in range(n_threads)] # Can try executor.map()
+        
+#         for f in concurrent.futures.as_completed(results):
+#             print(f.result())
+    
+# def test_stocks(index_of_thread, num_of_threads): # Divide # of stocks per thread / total stocks to be tested. Index_of_thread is which thread from 0 to n threads.
+#     n_stocks_per_thread = len(Stock.objects.all()) 
+#     portion = Stock.objects.all()[index_of_thread*n_stocks_per_thread:(index_of_thread+1)*n_stocks_per_thread]
+
 def get_sp500():
 	request = get('https://en.wikipedia.org/wiki/List_of_S%26P_500_companies')
 	soup = BeautifulSoup(request.text, 'lxml')
@@ -22,7 +32,7 @@ def get_nasdaq(as_list=True): # Nasdaq + NYSE + AMEX
         df.columns = df.iloc[1].tolist()
         df = df.iloc[2:]
         df = df.reset_index()
-        df = df['Symbol']
+        df = df[['Symbol', 'Company Name']]
         dfs.append(df)
         
     for letter in 'abcdefghijklmnopqrstuvwxyz':           
@@ -30,7 +40,7 @@ def get_nasdaq(as_list=True): # Nasdaq + NYSE + AMEX
         soup = BeautifulSoup(request.text, 'lxml')
         table = soup.find('table', {'class': 'quotes'})
         df = pd.read_html(str(table))[0]
-        df = df['Code']
+        df = df[['Code', 'Name']]
         dfs.append(df)
   
     df = pd.concat(dfs)
@@ -50,7 +60,7 @@ def get_nyse(as_list=True): # Test to see if duplicate tickers on backend or Dja
         df.columns = df.iloc[1].tolist()
         df = df.iloc[2:]
         df = df.reset_index()
-        df = df['Symbol']
+        df = df[['Symbol', 'Company Name']]
         dfs.append(df)
         
     for letter in 'abcdefghijklmnopqrstuvwxyz':       
@@ -58,7 +68,7 @@ def get_nyse(as_list=True): # Test to see if duplicate tickers on backend or Dja
         soup = BeautifulSoup(request.text, 'lxml')
         table = soup.find('table', {'class': 'quotes'})
         df = pd.read_html(str(table))[0]
-        df = df['Code']
+        df = df[['Code', 'Name']]
         dfs.append(df)
         
     	# Will this work since they are series?

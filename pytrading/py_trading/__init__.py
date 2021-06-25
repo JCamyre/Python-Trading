@@ -385,6 +385,9 @@ class Stock:
 		tr = soup.find_all('tr', {'class': "insider-sale-row-2"})
 		return [i.get_text() for i in tr]
 
+		BASE_URL = f'https://www.secform4.com/'
+		# Will be hard to get a stock, think I have to use Selenium to type in search bar and search.
+
 	def social_media_sentiment(self, num_of_tweets=50): # Also reddit sentiment, and twitter
 		# Twitter
 		load_dotenv()
@@ -488,7 +491,10 @@ class Stock:
 			data_dict = {key : val for key, val in zip(keys, vals)}
 			all_dicts.append(data_dict)
 		return all_dicts
+
+	# Options links: https://www.optionsprofitcalculator.com, f'https://marketchameleon.com/Overview/{ticker}/IV/', Need to find stock api that has option chain info like robinhood (greeks, iv, etc, price)	
 	
+
 	
 	def __str__(self):
 		return self.ticker
