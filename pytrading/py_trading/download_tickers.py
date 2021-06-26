@@ -22,7 +22,7 @@ def get_sp500():
 	df = pd.read_html(str(table))
 	return df[0]
 
-def get_nasdaq(as_list=True): # Nasdaq + NYSE + AMEX
+def get_nasdaq(): # Nasdaq + NYSE + AMEX
     dfs = []
     for letter in 'abcdefghijklmnopqrstuvwxyz':
         request = get(f'https://www.advfn.com/nasdaq/nasdaq.asp?companies={letter.upper()}')
@@ -32,7 +32,7 @@ def get_nasdaq(as_list=True): # Nasdaq + NYSE + AMEX
         df.columns = df.iloc[1].tolist()
         df = df.iloc[2:]
         df = df.reset_index()
-        df = df[['Symbol', 'Company Name']]
+        df = df[['Symbol', 'Equity']]
         df.columns = ['ticker', 'name']
         dfs.append(df)
         
@@ -47,9 +47,10 @@ def get_nasdaq(as_list=True): # Nasdaq + NYSE + AMEX
   
     df = pd.concat(dfs)
     df = df.reset_index()
-    df = df[0]
-    if as_list:
-        return df.tolist()
+    df = df[['ticker', 'name']]
+    print(df)
+    # if as_list:
+        # return df.set_index('ticker').to_dict()
     return df
 
 def get_nyse(as_list=True): # Test to see if duplicate tickers on backend or Django webapp
