@@ -35,5 +35,5 @@ six==1.15.0
 td-ameritrade-python-api==0.3.4
 tweepy==3.10.0
 urllib3==1.26.2
-websockets==8.1
+websockets==9.1
 Werkzeug==1.0.1
