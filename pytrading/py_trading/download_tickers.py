@@ -48,7 +48,6 @@ def get_nasdaq(): # Nasdaq + NYSE + AMEX
     df = pd.concat(dfs)
     df = df.reset_index()
     df = df[['ticker', 'name']]
-    print(df)
     # if as_list:
         # return df.set_index('ticker').to_dict()
     return df
@@ -63,7 +62,6 @@ def get_nyse(): # Test to see if duplicate tickers on backend or Django webapp
         df.columns = df.iloc[1].tolist()
         df = df.iloc[2:]
         df = df.reset_index()
-        print(df)
         df = df[['Symbol', 'Equity']]
         df.columns = ['ticker', 'name']
         dfs.append(df)
@@ -76,7 +74,6 @@ def get_nyse(): # Test to see if duplicate tickers on backend or Django webapp
             df = pd.read_html(str(table))[0]
         except:       
             df = pd.read_html(str(table))            
-        print(df)
         df = df[['Code', 'Name']]
         df.columns = ['ticker', 'name']
         dfs.append(df)
