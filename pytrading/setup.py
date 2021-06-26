@@ -36,7 +36,7 @@ setuptools.setup(
 	'jdcal==1.4.1',
 	'Jinja2==2.11.3',
 	'kiwisolver==1.3.1',
-	'lxml==4.6.2',
+	'lxml>=4.6.3',
 	'MarkupSafe==1.1.1',
 	'matplotlib==3.3.3',
 	'mplfinance==0.12.7a5',
@@ -57,7 +57,7 @@ setuptools.setup(
 	'td-ameritrade-python-api==0.3.4',
 	'tweepy==3.10.0',
 	'urllib3>=1.26.5',
-	'websockets==8.1',
+	'websockets>=9.1',
 	'Werkzeug==1.0.1',
     ]
 )
