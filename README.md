@@ -14,6 +14,5 @@ https://query1.finance.yahoo.com
 * **Joseph Camyre**
 
 ### Additional notes
-
-Due to limits of Yahoo's API limit of 2,000 calls per hour, it is vital to stay under this limit to receive stock data.
+Yahoo finance API has a limit of 2,000 calls per hour.
 
