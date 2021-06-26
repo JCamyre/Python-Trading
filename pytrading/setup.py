@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name="Py-Trading", # Replace with your own username
-    version="0.3.12",
+    version="0.3.14",
     author="Joseph Camyre",
     author_email="jwcamry03@gmail.com",
     description="A convenient Python module for stock information.",
@@ -44,7 +44,7 @@ setuptools.setup(
 	'oauthlib==3.1.0',
 	'openpyxl==3.0.6',
 	'pandas==1.2.1',
-	'Pillow==8.1.0',
+	'Pillow>=8.2.0',
 	'pycparser==2.20',
 	'pyOpenSSL==20.0.1',
 	'pyparsing==2.4.7',
@@ -56,7 +56,7 @@ setuptools.setup(
 	'six==1.15.0',
 	'td-ameritrade-python-api==0.3.4',
 	'tweepy==3.10.0',
-	'urllib3==1.26.2',
+	'urllib3>=1.26.5',
 	'websockets==8.1',
 	'Werkzeug==1.0.1',
     ]

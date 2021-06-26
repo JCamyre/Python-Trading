@@ -22,7 +22,7 @@ def get_sp500():
 	df = pd.read_html(str(table))
 	return df[0]
 
-def get_nasdaq(as_list=True): # Nasdaq + NYSE + AMEX
+def get_nasdaq(): # Nasdaq + NYSE + AMEX
     dfs = []
     for letter in 'abcdefghijklmnopqrstuvwxyz':
         request = get(f'https://www.advfn.com/nasdaq/nasdaq.asp?companies={letter.upper()}')
@@ -32,7 +32,7 @@ def get_nasdaq(as_list=True): # Nasdaq + NYSE + AMEX
         df.columns = df.iloc[1].tolist()
         df = df.iloc[2:]
         df = df.reset_index()
-        df = df[['Symbol', 'Company Name']]
+        df = df[['Symbol', 'Equity']]
         df.columns = ['ticker', 'name']
         dfs.append(df)
         
@@ -47,12 +47,13 @@ def get_nasdaq(as_list=True): # Nasdaq + NYSE + AMEX
   
     df = pd.concat(dfs)
     df = df.reset_index()
-    df = df[0]
-    if as_list:
-        return df.tolist()
+    df = df[['ticker', 'name']]
+    print(df)
+    # if as_list:
+        # return df.set_index('ticker').to_dict()
     return df
 
-def get_nyse(as_list=True): # Test to see if duplicate tickers on backend or Django webapp
+def get_nyse(): # Test to see if duplicate tickers on backend or Django webapp
     dfs = []
     for letter in 'abcdefghijklmnopqrstuvwxyz':
         request = get(f'https://www.advfn.com/nyse/newyorkstockexchange.asp?companies={letter.upper()}')
@@ -62,7 +63,8 @@ def get_nyse(as_list=True): # Test to see if duplicate tickers on backend or Dja
         df.columns = df.iloc[1].tolist()
         df = df.iloc[2:]
         df = df.reset_index()
-        df = df[['Symbol', 'Company Name']]
+        print(df)
+        df = df[['Symbol', 'Equity']]
         df.columns = ['ticker', 'name']
         dfs.append(df)
         
@@ -70,7 +72,11 @@ def get_nyse(as_list=True): # Test to see if duplicate tickers on backend or Dja
         request = get(f'https://eoddata.com/stocklist/NYSE/{letter}.htm')
         soup = BeautifulSoup(request.text, 'lxml')
         table = soup.find('table', {'class': 'quotes'})
-        df = pd.read_html(str(table))[0]
+        try:
+            df = pd.read_html(str(table))[0]
+        except:       
+            df = pd.read_html(str(table))            
+        print(df)
         df = df[['Code', 'Name']]
         df.columns = ['ticker', 'name']
         dfs.append(df)
@@ -78,11 +84,12 @@ def get_nyse(as_list=True): # Test to see if duplicate tickers on backend or Dja
     	# Will this work since they are series?
     df = pd.concat(dfs)
     df = df.reset_index()
-    df = df[0]
-    if as_list:
-        return sorted(df.tolist())
-    return df.sort_values(ascending=True)
-
+    df = df[['ticker', 'name']]
+    # df['ticker'] = df['ticker'].unique()
+    # df['name'] = df['name'].unique()
+    # if as_list:
+    #     return sorted(df.tolist())
+    return df.sort_values(by='ticker', ascending=True)
 
 
 # def get_biggest_movers():
