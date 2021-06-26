@@ -33,6 +33,7 @@ def get_nasdaq(as_list=True): # Nasdaq + NYSE + AMEX
         df = df.iloc[2:]
         df = df.reset_index()
         df = df[['Symbol', 'Company Name']]
+        df.columns = ['ticker', 'name']
         dfs.append(df)
         
     for letter in 'abcdefghijklmnopqrstuvwxyz':           
@@ -41,6 +42,7 @@ def get_nasdaq(as_list=True): # Nasdaq + NYSE + AMEX
         table = soup.find('table', {'class': 'quotes'})
         df = pd.read_html(str(table))[0]
         df = df[['Code', 'Name']]
+        df.columns = ['ticker', 'name']
         dfs.append(df)
   
     df = pd.concat(dfs)
@@ -61,6 +63,7 @@ def get_nyse(as_list=True): # Test to see if duplicate tickers on backend or Dja
         df = df.iloc[2:]
         df = df.reset_index()
         df = df[['Symbol', 'Company Name']]
+        df.columns = ['ticker', 'name']
         dfs.append(df)
         
     for letter in 'abcdefghijklmnopqrstuvwxyz':       
@@ -69,6 +72,7 @@ def get_nyse(as_list=True): # Test to see if duplicate tickers on backend or Dja
         table = soup.find('table', {'class': 'quotes'})
         df = pd.read_html(str(table))[0]
         df = df[['Code', 'Name']]
+        df.columns = ['ticker', 'name']
         dfs.append(df)
         
     	# Will this work since they are series?
