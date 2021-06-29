@@ -365,9 +365,12 @@ class Stock:
 
 		td = soup.find_all('td', {'class': 'fullview-links'})[1]
 		sectors = td.find_all('a', {'class': 'tab-link'})
-		sector_urls = ([str('https://finviz.com/' + i['href']) for i in sectors])
-		for url in sector_urls: # Find stocks with similar P/E ratios and market cap, then track difference in performance
-			print(url)
+		# sector_urls = ([str('https://finviz.com/' + i['href']) for i in sectors])
+		# for url in sector_urls: # Find stocks with similar P/E ratios and market cap, then track difference in performance
+		# 	print(url)
+  
+  		sectors = [sector.get_text() for sector in sectors]
+		return sectors
 
 	def etfs(self):
 		BASE_URL = f'https://etfdb.com/stock/{self.ticker}/'
