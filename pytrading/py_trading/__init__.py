@@ -278,7 +278,7 @@ class Stock:
 		# 	file.write(str(soup.prettify('utf-8')))
 
 
-	def news_sentiments(self, sectors=None): # Returns news articles curated via Finviz, Yahoo, and Google News, GET UNUSUAL OPTION ACTIVITY
+	def news_sentiments(self): # Returns news articles curated via Finviz, Yahoo, and Google News, GET UNUSUAL OPTION ACTIVITY
 		BASE_URL = f'https://finviz.com/quote.ashx?t={self.ticker}'
 		soup = self._get_soup(BASE_URL)
 
@@ -291,7 +291,6 @@ class Stock:
 			link = article.find('a')['href']
 			df_data.append((date.get_text(), article.get_text(), link))
 		df = pd.DataFrame(df_data, columns=['Time', 'Headline', 'Link'])
-
 
 
 		BASE_URL = f'https://finance.yahoo.com/quote/{self.ticker}/news?p={self.ticker}'
@@ -311,21 +310,22 @@ class Stock:
   
   		# Getting news from google news search
 		googlenews = GoogleNews(lang='en', period='14d') # Specify period for news
-		googlenews.get_news(self.ticker) 
+		stock_news = googlenews.get_news(self.ticker).results()
+  
 		# print([(i, j) for i, j in zip(googlenews.get_texts(), googlenews.get_links())])
 		# To get other pages, do googlenews.get_page(2), etc.
   
 		# Have whitelist of websites to search articles from. Maybe have key word to filter out stupid stuff.
+  
+		sectors = self.find_competition()
 		sector_news = []
 		if sectors:
 			for sector in sectors:
-				googlenews = GoogleNews(lang='en', period='14d') # Specify period for news
-				for page in range(1, 3):
-					articles = googlenews.get_news(self.ticker).get_page(page)
-					for article in articles:
-						sector_news.append(article.get_texts(), article.get_links())
+				googlenews = GoogleNews(lang='en', period='14d')
+				googlenews.get_news(sector)
+				sector_news.append(googlenews.result())
     
-		return df, news, press_releases, sector_news, googlenews.get_news(self.ticker)
+		return df, news, press_releases, sector_news, stock_news
 
 	def financials(self): # OMEGALUL
 		# Displaying all information. Could leave this as a dictionary.
@@ -382,7 +382,7 @@ class Stock:
 		# for url in sector_urls: # Find stocks with similar P/E ratios and market cap, then track difference in performance
 		# 	print(url)
   
-  		sectors = [sector.get_text() for sector in sectors]
+		sectors = [sector.get_text() for sector in sectors]
 		return sectors
 
 	def etfs(self):
