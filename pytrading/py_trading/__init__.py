@@ -278,7 +278,7 @@ class Stock:
 		# 	file.write(str(soup.prettify('utf-8')))
 
 
-	def news_sentiments(self): # Returns news articles curated via Finviz, Yahoo, and Google News, GET UNUSUAL OPTION ACTIVITY
+	def news_sentiments(self, sectors=None): # Returns news articles curated via Finviz, Yahoo, and Google News, GET UNUSUAL OPTION ACTIVITY
 		BASE_URL = f'https://finviz.com/quote.ashx?t={self.ticker}'
 		soup = self._get_soup(BASE_URL)
 
@@ -292,11 +292,7 @@ class Stock:
 			df_data.append((date.get_text(), article.get_text(), link))
 		df = pd.DataFrame(df_data, columns=['Time', 'Headline', 'Link'])
 
-		# Getting news from google news search
-		googlenews = GoogleNews(lang='en', period='14d') # Specify period for news
-		googlenews.search(self.ticker) 
-		# print([(i, j) for i, j in zip(googlenews.get_texts(), googlenews.get_links())])
-		# To get other pages, do googlenews.get_page(2), etc.
+
 
 		BASE_URL = f'https://finance.yahoo.com/quote/{self.ticker}/news?p={self.ticker}'
 		soup = self._get_soup(BASE_URL)
@@ -311,8 +307,25 @@ class Stock:
 		press_releases = [(link.get_text(), str('yahoo.com' + link['href'])) for link in links]
 		# Look for keywords in the news? Any showcases, Investor/analyst days, Analyst revisions, Management transitions
 		# Product launches, Significant stock buyback changes
-
-		return df, news, press_releases
+  
+  
+  		# Getting news from google news search
+		googlenews = GoogleNews(lang='en', period='14d') # Specify period for news
+		googlenews.get_news(self.ticker) 
+		# print([(i, j) for i, j in zip(googlenews.get_texts(), googlenews.get_links())])
+		# To get other pages, do googlenews.get_page(2), etc.
+  
+		# Have whitelist of websites to search articles from. Maybe have key word to filter out stupid stuff.
+		sector_news = []
+		if sectors:
+			for sector in sectors:
+				googlenews = GoogleNews(lang='en', period='14d') # Specify period for news
+				for page in range(1, 3):
+					articles = googlenews.get_news(self.ticker).get_page(page)
+					for article in articles:
+						sector_news.append(article.get_texts(), article.get_links())
+    
+		return df, news, press_releases, sector_news, googlenews.get_news(self.ticker)
 
 	def financials(self): # OMEGALUL
 		# Displaying all information. Could leave this as a dictionary.
@@ -394,14 +407,29 @@ class Stock:
 	def social_media_sentiment(self, num_of_tweets=50): # Also reddit sentiment, and twitter
 		# Twitter
 		load_dotenv()
-		consumer_key = os.getenv('API_KEY')
-		consumer_secret = os.getenv('API_SECRET_KEY')
+		consumer_key = os.getenv('TWEEPY_KEY')
+		consumer_secret = os.getenv('TWEEPY_SECRET_KEY')
 		auth = tweepy.AppAuthHandler(consumer_key, consumer_secret)
 		api = tweepy.API(auth, wait_on_rate_limit=True)
 		tweets = []
 		for i, tweet in enumerate(tweepy.Cursor(api.search, q=f'${self.ticker}', count=num_of_tweets).items(num_of_tweets)):
 			tweets.append(i, tweet.text, tweet.author.screen_name, tweet.retweet_count, tweet.favorite_count, tweet.created_at)
+   
+		# Get sentiment from stocktwits
+		
+	
+  
 		return tweets
+
+	# Stocks with three good days in a row or above 9sma for three days. Good rsi = either high break out, piss low, ~40 support.
+	def technical_analysis(self):
+		pass
+
+	def fundamental_analysis(self):
+		pass
+
+	def seasonality(self):
+		pass
 
 	def catalysts(self): # Returns date of showcases, FDA approvals, earnings, etc
 		df_data = []
