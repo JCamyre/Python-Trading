@@ -310,7 +310,8 @@ class Stock:
   
   		# Getting news from google news search
 		googlenews = GoogleNews(lang='en', period='14d') # Specify period for news
-		stock_news = googlenews.get_news(self.ticker).results()
+		googlenews.get_news(self.ticker)
+		stock_news = googlenews.results()
   
 		# print([(i, j) for i, j in zip(googlenews.get_texts(), googlenews.get_links())])
 		# To get other pages, do googlenews.get_page(2), etc.
@@ -525,9 +526,10 @@ class Stock:
 
 	# Options links: https://www.optionsprofitcalculator.com, f'https://marketchameleon.com/Overview/{ticker}/IV/', Need to find stock api that has option chain info like robinhood (greeks, iv, etc, price)	
 	
-
-	
 	def __str__(self):
+		return self.ticker
+
+	def __repr__(self):
 		return self.ticker
 
 print('Welcome to Py-Trading!')
