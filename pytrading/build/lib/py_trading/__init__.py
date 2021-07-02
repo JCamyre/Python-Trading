@@ -292,11 +292,6 @@ class Stock:
 			df_data.append((date.get_text(), article.get_text(), link))
 		df = pd.DataFrame(df_data, columns=['Time', 'Headline', 'Link'])
 
-		# Getting news from google news search
-		googlenews = GoogleNews(lang='en', period='14d') # Specify period for news
-		googlenews.search(self.ticker) 
-		# print([(i, j) for i, j in zip(googlenews.get_texts(), googlenews.get_links())])
-		# To get other pages, do googlenews.get_page(2), etc.
 
 		BASE_URL = f'https://finance.yahoo.com/quote/{self.ticker}/news?p={self.ticker}'
 		soup = self._get_soup(BASE_URL)
@@ -311,8 +306,27 @@ class Stock:
 		press_releases = [(link.get_text(), str('yahoo.com' + link['href'])) for link in links]
 		# Look for keywords in the news? Any showcases, Investor/analyst days, Analyst revisions, Management transitions
 		# Product launches, Significant stock buyback changes
-
-		return df, news, press_releases
+  
+  
+  		# Getting news from google news search
+		googlenews = GoogleNews(lang='en', period='14d') # Specify period for news
+		googlenews.get_news(self.ticker + ' stock')
+		stock_news = googlenews.results()
+  
+		# print([(i, j) for i, j in zip(googlenews.get_texts(), googlenews.get_links())])
+		# To get other pages, do googlenews.get_page(2), etc.
+  
+		# Have whitelist of websites to search articles from. Maybe have key word to filter out stupid stuff.
+  
+		sectors = self.find_competition()
+		sector_news = []
+		if sectors:
+			for sector in sectors:
+				googlenews = GoogleNews(lang='en', period='14d')
+				googlenews.get_news(sector)
+				sector_news.append(googlenews.result())
+    
+		return df, news, press_releases, sector_news, stock_news
 
 	def financials(self): # OMEGALUL
 		# Displaying all information. Could leave this as a dictionary.
@@ -369,7 +383,7 @@ class Stock:
 		# for url in sector_urls: # Find stocks with similar P/E ratios and market cap, then track difference in performance
 		# 	print(url)
   
-  		sectors = [sector.get_text() for sector in sectors]
+		sectors = [sector.get_text() for sector in sectors]
 		return sectors
 
 	def etfs(self):
@@ -394,14 +408,29 @@ class Stock:
 	def social_media_sentiment(self, num_of_tweets=50): # Also reddit sentiment, and twitter
 		# Twitter
 		load_dotenv()
-		consumer_key = os.getenv('API_KEY')
-		consumer_secret = os.getenv('API_SECRET_KEY')
+		consumer_key = os.getenv('TWEEPY_KEY')
+		consumer_secret = os.getenv('TWEEPY_SECRET_KEY')
 		auth = tweepy.AppAuthHandler(consumer_key, consumer_secret)
 		api = tweepy.API(auth, wait_on_rate_limit=True)
 		tweets = []
 		for i, tweet in enumerate(tweepy.Cursor(api.search, q=f'${self.ticker}', count=num_of_tweets).items(num_of_tweets)):
 			tweets.append(i, tweet.text, tweet.author.screen_name, tweet.retweet_count, tweet.favorite_count, tweet.created_at)
+   
+		# Get sentiment from stocktwits
+		
+	
+  
 		return tweets
+
+	# Stocks with three good days in a row or above 9sma for three days. Good rsi = either high break out, piss low, ~40 support.
+	def technical_analysis(self):
+		pass
+
+	def fundamental_analysis(self):
+		pass
+
+	def seasonality(self):
+		pass
 
 	def catalysts(self): # Returns date of showcases, FDA approvals, earnings, etc
 		df_data = []
@@ -497,9 +526,10 @@ class Stock:
 
 	# Options links: https://www.optionsprofitcalculator.com, f'https://marketchameleon.com/Overview/{ticker}/IV/', Need to find stock api that has option chain info like robinhood (greeks, iv, etc, price)	
 	
-
-	
 	def __str__(self):
+		return self.ticker
+
+	def __repr__(self):
 		return self.ticker
 
 print('Welcome to Py-Trading!')
