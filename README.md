@@ -13,6 +13,5 @@ https://query1.finance.yahoo.com
 
 * **Joseph Camyre**
 
-### Additional notes
-Yahoo finance API has a limit of 2,000 calls per hour.
+
 
