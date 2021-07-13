@@ -7,7 +7,10 @@ import re
 from GoogleNews import GoogleNews
 from dotenv import load_dotenv
 import os 
-import tweepy 
+import tweepy
+
+# When I have time, replace yahoo api for alphavantage. https://rapidapi.com/alphavantage/api/alpha-vantage, https://www.alphavantage.co/premium/. https://rapidapi.com/mpeng/api/stock-and-options-trading-data-provider
+# I can access a lot more stuff (like news and related) by directly accessing API. Most of these Stock. methods can be replaced by accessing API lol.
 
 class Portfolio:
 	# Maybe do a DataFrame? Easier to display, can sort. Columns for tickers, change_percentage, last_updated_price
@@ -139,10 +142,6 @@ class Stock:
 	def set_last_updated(self, price):
 		self._last_updated_price = price
 
-	def update_stock(self):
-		self.df = get_intra_day_data(self.ticker)
-		self.df_month = get_month_data(self.ticker)
-
 	def _find_match(self, pattern, text):
 		match = pattern.search(text)
 		return match
@@ -262,20 +261,11 @@ class Stock:
 		df = pd.DataFrame(df_data, columns=['Indictator', 'Signal', 'Strength', 'Direction'])
 		return df, titles
 
-	def ta_indictators(self): # Loads wrong page. Beta, RSI history, above/below 9 SMA, above/below 180 SMA, volatility, rel volume
-		BASE_URL = f'https://www.tradingview.com/symbols/{self.ticker}/technicals/'
-		soup = self._get_soup(BASE_URL)
+	def ta_indictators(self): # Loads wrong page. Beta, RSI history, above/below 9 SMA, above/below 180 SMA, volatility, rel volume, 52W high/low
+		# OBV: calculate OBV, then compare to stock close price, say how close they correlate.
+  
 
-		with open('output1.html', 'w', encoding='utf-8') as file:
-			file.write(str(soup))
-
-		# Buy or sell (Summary, Oscillators, Moving Averages)
-		s = soup.find_all('div', {'class': 'speedometerWrapper-1SNrYKXY'})
-		
-		# Oscillators, this is bugged
-		oscillators = soup.find('div', {'class': 'container-2w8ThMcC tableWithAction-2OCRQQ8y'})
-		# with open('output1.html', 'w', encoding='utf-8') as file:
-		# 	file.write(str(soup.prettify('utf-8')))
+		pass
 
 
 	def news_sentiments(self): # Returns news articles curated via Finviz, Yahoo, and Google News, GET UNUSUAL OPTION ACTIVITY
@@ -416,11 +406,17 @@ class Stock:
 		for i, tweet in enumerate(tweepy.Cursor(api.search, q=f'${self.ticker}', count=num_of_tweets).items(num_of_tweets)):
 			tweets.append(i, tweet.text, tweet.author.screen_name, tweet.retweet_count, tweet.favorite_count, tweet.created_at)
    
-		# Get sentiment from stocktwits
-		
-	
+		# Get sentiment from stocktwits, get a token later. symbol, trending, sectors, symbols, 
+		# Symbol
+		BASE_URL = f'https://api.stocktwits.com/api/2/streams/symbol/{self.ticker}.json'
+		symbol_messages = [message['body'] for message in get(BASE_URL).json()['messages']]
+
+		BASE_URL = 'https://api.stocktwits.com/api/2/streams/trending.json'
+		trending_messages = [message['body'] for message in get(BASE_URL).json()['messages']]
+
+		# https://api.stocktwits.com/api/2/streams/sectors/technology.json?access_token=<access_token>
   
-		return tweets
+		return tweets, symbol_messages, trending_messages
 
 	# Stocks with three good days in a row or above 9sma for three days. Good rsi = either high break out, piss low, ~40 support.
 	def technical_analysis(self):
