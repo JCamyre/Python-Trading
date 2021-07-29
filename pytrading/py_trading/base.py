@@ -19,8 +19,9 @@ class Ticker:
         # Quicker version? url = 'https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=IBM&apikey=demo'
         # Can access more data but will cost a lot of time
         data = _get_json(f'https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol={self.ticker}&apikey={key}')['Time Series (Daily)']
-        df = pd.DataFrame([[datetime.strptime(date, '%Y-%m-%d'), data[date]['4. close'], data[date]['2. high'], data[date]['3. low'], data[date]['1. open'], data[date]['6. volume']] for date in data.keys()], columns=['date', 'close', 'high', 'low', 'open', 'volume'])
-        df = df.set_index('date')
+        df = pd.DataFrame([[datetime.strptime(date, '%Y-%m-%d'), data[date]['4. close'], data[date]['2. high'], data[date]['3. low'], data[date]['1. open'], data[date]['6. volume']] for date in data.keys()], 
+                          columns=['Date', 'Close', 'High', 'Low', 'Open', 'Volume'])
+        df = df.set_index('Date')
                 
         return df.iloc[:90]
     

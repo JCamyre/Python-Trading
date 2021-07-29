@@ -95,19 +95,16 @@ class Stock:
         try:
             self.ticker = ticker
             self.df = Ticker(ticker).get_data()
-            self.prev_close = Ticker(ticker).get_data('1d', '2d').iloc[0]['Close']
-            try:
-                self._last_updated_price = self.df.iloc[-1]['Close']
-            except:
-                pass
+            self.prev_close = self.df.iloc[-1]
             self.target_prices = target_prices
             self.price_invested = price_invested
         except:
             raise Exception('Sorry, we could not find this stock!')
             
 
-    def get_month_data(self, n=1):
-        df = Ticker(self.ticker).get_data('1d', f'{n}mo')
+    def get_month_data(self):
+        # This one should be full then cut down to 24 months
+        df = Ticker(self.ticker).get_data()
         df.index = pd.to_datetime(df.index)
         for i in range(2, df.shape[0]):
             df.loc[df.index[i], '2_sma'] = sum([float(i) for i in df.iloc[i-2:i]['Close']])/2
@@ -137,11 +134,11 @@ class Stock:
         avg_volume = sum(self.df['Volume'])/len(self.df)
         return self.df.iloc[-1]/avg_volume
 
-    def get_last_updated(self):
-        return self._last_updated_price
+    # def get_last_updated(self):
+    #     return self._last_updated_price
 
-    def set_last_updated(self, price):
-        self._last_updated_price = price
+    # def set_last_updated(self, price):
+    #     self._last_updated_price = price
 
     def _find_match(self, pattern, text):
         match = pattern.search(text)
