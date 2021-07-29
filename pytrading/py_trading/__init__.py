@@ -90,10 +90,11 @@ class Portfolio:
 
 class Stock:
 
-    def __init__(self, ticker, interval='1m', period='1d', target_prices=None, price_invested=None):
+    def __init__(self, ticker,  target_prices=None, price_invested=None):
+        # interval='1m', period='1d',
         try:
             self.ticker = ticker
-            self.df = Ticker(ticker).get_data(interval, period)
+            self.df = Ticker(ticker).get_data()
             self.prev_close = Ticker(ticker).get_data('1d', '2d').iloc[0]['Close']
             try:
                 self._last_updated_price = self.df.iloc[-1]['Close']
@@ -425,6 +426,8 @@ class Stock:
         adl = 0.0
         for row in data.iterrows():
             adl += (((row['Close'] - row['Low']) - (['High'] - row['Close']))/(['High'] - row['Low'])) * row['Volume']
+            print(adl)
+        
         
         return adl
   
