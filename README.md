@@ -7,7 +7,7 @@ pip install py_trading
 ```
 
 ## API's Used
-https://query1.finance.yahoo.com
+https://www.alphavantage.co
 
 ## Authors
 
