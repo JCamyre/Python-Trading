@@ -422,9 +422,7 @@ class Stock:
         data = self.get_month_data()
         adl = 0.0
         for row in data.iterrows():
-            adl += (((row['Close'] - row['Low']) - (['High'] - row['Close']))/(['High'] - row['Low'])) * row['Volume']
-            print(adl)
-        
+            adl += (((row['Close'] - row['Low']) - (['High'] - row['Close']))/(['High'] - row['Low'])) * row['Volume']     
         
         return adl
   
