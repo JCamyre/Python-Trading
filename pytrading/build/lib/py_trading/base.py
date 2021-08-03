@@ -21,10 +21,13 @@ class Ticker:
         # Can access more data but will cost a lot of time
         json = _get_json(f'https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol={self.ticker}&apikey={key}')
         while not json:
-            json = _get_json(f'https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol={self.ticker}&apikey={key}')
-            time.sleep(3)
+            try: 
+                data = _get_json(f'https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol={self.ticker}&apikey={key}')['Time Series (Daily)']
+                break
+            except:
+                time.sleep(3)
         
-        data = json['Time Series (Daily)']
+        # data = json['Time Series (Daily)']
         df = pd.DataFrame([[datetime.strptime(date, '%Y-%m-%d'), data[date]['4. close'], data[date]['2. high'], data[date]['3. low'], data[date]['1. open'], data[date]['6. volume']] for date in data.keys()], 
                           columns=['Date', 'Close', 'High', 'Low', 'Open', 'Volume'])
         df = df.set_index('Date')
