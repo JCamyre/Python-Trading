@@ -13,5 +13,5 @@ https://www.alphavantage.co
 
 * **Joseph Camyre**
 
-
+https://pypi.org/project/Py-Trading/
 
