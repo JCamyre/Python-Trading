@@ -298,7 +298,7 @@ class Stock:
   
           # Getting news from google news search
         googlenews = GoogleNews(lang='en', period='14d') # Specify period for news
-        googlenews.get_news(self.ticker + ' stock')
+        googlenews.get_news(f'${self.ticker} stock')
         stock_news = googlenews.results()
   
         # print([(i, j) for i, j in zip(googlenews.get_texts(), googlenews.get_links())])
@@ -311,7 +311,7 @@ class Stock:
         if sectors:
             for sector in sectors:
                 googlenews = GoogleNews(lang='en', period='14d')
-                googlenews.get_news(sector} sector stocks')
+                googlenews.get_news(f'{sector} sector stocks')
                 sector_news.append(googlenews.result())
     
         return df, news, press_releases, sector_news, stock_news
