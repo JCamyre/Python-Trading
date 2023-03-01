@@ -23,10 +23,11 @@ class Portfolio:
         # 	while stocks[0] != str:
         # 		stocks = stocks[0]
         # 		print(stocks)
+
         if type(stocks) == list:
-            self.stocks = {Stock(stock, interval=interval, period=period) for stock in sorted(stocks)}
+            self.stocks = [Stock(stock, interval=interval, period=period) for stock in sorted(stocks)]
         else:
-            self.stocks = {Stock(stock, interval=interval, period=period) for stock in sorted(stocks.split())}	
+            self.stocks = [Stock(stock, interval=interval, period=period) for stock in sorted(stocks.split())]
 
     def add_stocks(self, stocks):
         for stock in stocks.split():
@@ -97,10 +98,12 @@ class Stock:
             self.prev_close = self.df.iloc[-1]
             self.target_prices = target_prices
             self.price_invested = price_invested
+            self._cur_day_stats = self.df.iloc[-1]
+            self._prev_day_stats = self.df.iloc[-2]
         except:
             raise Exception('Sorry, we could not find this stock!')
             
-
+    # Return DataFrame with last 30 days of Stock's closing price and other stats
     def get_month_data(self):
         # This one should be full then cut down to 24 months
         df = Ticker(self.ticker).get_data()
@@ -118,11 +121,29 @@ class Stock:
     def add_target_prices(self, new_target_prices):
         self.target_prices = new_target_prices
 
-    def daily_change_percentage(self):
-        return ((self.df.iloc[-1]['Close'] - self.df.iloc[-2]['Close'])/self.df.iloc[-2]['Close'])*100
+    # Calculate the daily change % in a stock using current day's closing price and yesterday's closing price
+    def daily_change_percentage(self, format='cosmetic'):
+        value = (float(self._cur_day_stats['Close']) - float(self._prev_day_stats['Close']))/float(self._prev_day_stats['Close'])
+        if (format == 'cosmetic'):
+            return f"{value*100:.2f}%"
+        elif (format == 'number'):
+            return value
 
-    def daily_high_change_percentage(self):
-        return ((self.df.iloc[-1]['High'] - self.df.iloc[-2]['Close'])/self.df.iloc[-2]['Close'])*100
+    # Calculate the change in price from the high of today from close of yesterday
+    def daily_high_change_percentage(self, format='cosmetic'):
+        value = (float(self._cur_day_stats['High']) - float(self._prev_day_stats['Close']))/float(self._prev_day_stats['Close'])
+        if (format == 'cosmetic'):
+            return f"{value*100:.2f}%"
+        elif (format == 'number'):
+            return value
+    
+    # Calculate the change in price from the low of today from close of yesterday
+    def daily_low_change_percentage(self, format='cosmetic'):
+        value = (float(self._cur_day_stats['Low']) - float(self._prev_day_stats['Close']))/float(self._prev_day_stats['Close'])
+        if (format == 'cosmetic'):
+            return f"{value:.2f}%"
+        elif (format == 'number'):
+            return value
 
     def daily_stats(self):
         df = Ticker(self.ticker).get_data('1d', '1d')
@@ -132,12 +153,6 @@ class Stock:
     def get_relative_volume(self):
         avg_volume = sum(self.df['Volume'])/len(self.df)
         return self.df.iloc[-1]/avg_volume
-
-    # def get_last_updated(self):
-    #     return self._last_updated_price
-
-    # def set_last_updated(self, price):
-    #     self._last_updated_price = price
 
     def _find_match(self, pattern, text):
         match = pattern.search(text)

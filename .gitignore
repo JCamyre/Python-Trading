@@ -18,3 +18,4 @@ pytradingenv
 Pipfile
 Pipfile.lock
 pytrading/py_trading/testing.py
+test

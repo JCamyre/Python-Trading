@@ -35,6 +35,9 @@ class Ticker:
                 time.sleep(3)
 
         # data = json['Time Series (Daily)']
+        json = json['Time Series (Daily)']
+            
+        # Convert the JSON response from API to a Pandas DataFrame
         df = pd.DataFrame([[datetime.strptime(date, '%Y-%m-%d'), json[date]['4. close'], json[date]['2. high'], json[date]['3. low'], json[date]['1. open'], json[date]['6. volume']] for date in json.keys()],
                           columns=['Date', 'Close', 'High', 'Low', 'Open', 'Volume'])
         df = df.set_index('Date')

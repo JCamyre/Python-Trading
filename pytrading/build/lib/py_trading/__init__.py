@@ -90,8 +90,7 @@ class Portfolio:
 
 class Stock:
 
-    def __init__(self, ticker,  target_prices=None, price_invested=None):
-        # interval='1m', period='1d',
+    def __init__(self, ticker, target_prices=None, price_invested=None, interval='1m', period='1d'):
         try:
             self.ticker = ticker
             self.df = Ticker(ticker).get_data()

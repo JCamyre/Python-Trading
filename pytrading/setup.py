@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name="Py-Trading",  # Replace with your own username
-    version="0.4.9.7",
+    version="0.4.9.8",
     author="Joseph Camyre",
     author_email="jwcamry03@gmail.com",
     description="A Python module for trading information.",
