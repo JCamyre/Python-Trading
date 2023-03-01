@@ -12,4 +12,4 @@ py_trading/download_tickers.py
 py_trading/live_trading.py
 py_trading/stock_info.py
 py_trading/tempCodeRunnerFile.py
-py_trading/testing.py
+tests/testingstocks.py

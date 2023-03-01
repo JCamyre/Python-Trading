@@ -1,44 +1,44 @@
 Metadata-Version: 2.1
 Name: Py-Trading
-Version: 0.4.7.2
-Summary: A convenient Python module for stock information.
+Version: 0.4.9.7
+Summary: A Python module for trading information.
 Home-page: https://github.com/JCamyre/Python-Trading
 Author: Joseph Camyre
 Author-email: jwcamry03@gmail.com
-License: UNKNOWN
-Description: # Pytrading
-        This package contains modules with functions that assist day and swing traders by aiding them in keeping track of their positions 
-        and trending stocks.
-        
-        ## Installation
-        ```bash
-        pip install py-trading
-        ```
-        
-        ## Usage
-        ```python
-        import py_trading as pytrd
-        
-        my_portfolio = pytrd.Portfolio(['AAPL', 'TSLA', 'F', 'COKE'])
-        for stock in my_portfolio:
-        	stock.update_stock() 
-        	print(stock.get_month_data())
-        	print(stock.daily_change_percentage())
-        	print(stock.get_last_updated())
-        	print(stock.daily_high_change_percentage())
-        	print(stock.daily_stats())
-        ```
-        
-        ## Contributing
-        Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
-        
-        Please make sure to update tests as appropriate.
-        
-        ## License
-        [MIT](https://choosealicense.com/licenses/mit/)
-Platform: UNKNOWN
 Classifier: Programming Language :: Python :: 3
 Classifier: License :: OSI Approved :: MIT License
 Classifier: Operating System :: OS Independent
 Requires-Python: >=3.6
 Description-Content-Type: text/markdown
+License-File: LICENSE
+
+# Pytrading
+This package contains modules with functions that assist day and swing traders by aiding them in keeping track of their positions 
+and trending stocks.
+
+## Installation
+```bash
+pip install py-trading
+```
+
+## Usage
+```python
+import py_trading as pytrd
+
+my_portfolio = pytrd.Portfolio(['AAPL', 'TSLA', 'F', 'COKE'])
+for stock in my_portfolio:
+	stock.update_stock() 
+	print(stock.get_month_data())
+	print(stock.daily_change_percentage())
+	print(stock.get_last_updated())
+	print(stock.daily_high_change_percentage())
+	print(stock.daily_stats())
+```
+
+## Contributing
+Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
+
+Please make sure to update tests as appropriate.
+
+## License
+[MIT](https://choosealicense.com/licenses/mit/)

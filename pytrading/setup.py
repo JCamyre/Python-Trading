@@ -5,10 +5,10 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name="Py-Trading",  # Replace with your own username
-    version="0.4.7.2",
+    version="0.4.9.7",
     author="Joseph Camyre",
     author_email="jwcamry03@gmail.com",
-    description="A convenient Python module for stock information.",
+    description="A Python module for trading information.",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/JCamyre/Python-Trading",
@@ -41,7 +41,7 @@ setuptools.setup(
         'MarkupSafe==1.1.1',
         'matplotlib==3.3.3',
         'mplfinance==0.12.7a5',
-        'numpy==1.19.5',
+        'numpy==1.20.3',
         'oauthlib==3.1.0',
         'openpyxl==3.0.6',
         'pandas==1.2.1',
